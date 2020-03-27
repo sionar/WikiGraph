@@ -93,7 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("document.addEventListener('DOMContentLoaded', () => {\n  console.log('hi');\n  window.setInterval(() => console.log('hello'), 1000);\n})\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("document.addEventListener('DOMContentLoaded', () => {\n  getPage('Boston');\n})\n\n\nfunction getPage(name) {\n  const headerParams = '&origin=*&format=json&formatversion=2'\n  const prop = '&prop=links&plnamespace=0&pllimit=500'\n  const domain = 'http://en.wikipedia.org/w/api.php?action=query'\n  const searchParams = `&titles=${name}`\n  const url = `${domain}${headerParams}${searchParams}${prop}`;\n  console.log(url)\n  fetch(url, {\n    method: 'GET',\n    mode: 'cors',\n  })\n  .then(res => res.json())\n  .then(data => console.log(data))\n}\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ })
 
