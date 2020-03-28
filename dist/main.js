@@ -90,10 +90,23 @@
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-eval("document.addEventListener('DOMContentLoaded', () => {\n  getPage('Boston');\n})\n\n\nfunction getPage(name) {\n  const headerParams = '&origin=*&format=json&formatversion=2'\n  const prop = '&prop=links&plnamespace=0&pllimit=500'\n  const domain = 'http://en.wikipedia.org/w/api.php?action=query'\n  const searchParams = `&titles=${name}`\n  const url = `${domain}${headerParams}${searchParams}${prop}`;\n  console.log(url)\n  fetch(url, {\n    method: 'GET',\n    mode: 'cors',\n  })\n  .then(res => res.json())\n  .then(data => console.log(data))\n}\n\n//# sourceURL=webpack:///./src/index.js?");
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ \"./src/store.js\");\n\n\ndocument.addEventListener('DOMContentLoaded', () => {\n  getPageLinks('Tony');\n})\n\n\nfunction getPageLinks(name) {\n  const headerParams = '&origin=*&format=json&formatversion=2'\n  const prop = '&prop=links&plnamespace=0&pllimit=500'\n  const domain = 'http://en.wikipedia.org/w/api.php?action=query'\n  const searchParams = `&titles=${name}`\n  const url = `${domain}${headerParams}${searchParams}${prop}`;\n  fetch(url, {\n    method: 'GET',\n    mode: 'cors',\n  })\n  .then(res => res.json())\n  .then(data => getLinkPageCounts(data)) \n}\n\nfunction getLinkPageCounts(data) {\n  let titleQuery, links, titleQueryStr, searchParams, url;\n  const headerParams = '&origin=*&format=json&formatversion=2';\n  const prop = '&prop=linkshere|pageviews';\n  const domain = 'http://en.wikipedia.org/w/api.php?action=query';\n  for (let i = 0; i < data.query.pages[0].links.length/50; i++) {\n    titleQuery = [];\n    links = data.query.pages[0].links.slice(i*50,i*50 + 50);\n    links.forEach(link => titleQuery.push(link.title))\n    titleQueryStr = titleQuery.join('|');\n    searchParams = `&titles=${titleQueryStr}`\n    url = `${domain}${headerParams}${searchParams}${prop}`;\n    fetch(url, { method: 'GET', mode: 'cors',} )\n      .then(res => res.json())\n      .then(data => addFilteredEdges(data))\n    }\n  }\n\nfunction addFilteredEdges(data) {\n  const candidateEdges = data.query.pages;\n  for (let i = 0; i < candidateEdges.length; i++) {\n    if (candidateEdges[i].pageviews && candidateEdges[i].linkshere)\n      _store__WEBPACK_IMPORTED_MODULE_0__[\"edges\"][candidateEdges[i].pageid] = candidateEdges[i];\n  }\n  console.log(_store__WEBPACK_IMPORTED_MODULE_0__[\"edges\"]);\n}\n\n//# sourceURL=webpack:///./src/index.js?");
+
+/***/ }),
+
+/***/ "./src/store.js":
+/*!**********************!*\
+  !*** ./src/store.js ***!
+  \**********************/
+/*! exports provided: nodes, edges */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"nodes\", function() { return nodes; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"edges\", function() { return edges; });\nconst nodes = {};\nconst edges = {};\n\n\n//# sourceURL=webpack:///./src/store.js?");
 
 /***/ })
 
