@@ -1,2 +1,1 @@
-export let nodes = {};
-export let edges = {};
+export const nodes = {};

@@ -1,0 +1,33 @@
+#body-container {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  min-height: 100vh;
+}
+
+#header-bar {
+  display: flex;
+  width: 100%;
+  background-color: rgb(37, 170, 246);
+  height: 50px;
+  align-items: center;
+  position: relative;
+  left: 0px;
+  top: 0px;
+}
+
+h1 {
+  font-size: 30px;
+  margin-left: 20px;
+}
+
+
+h2 {
+  margin-left: 20px;
+}
+
+#canvas-box {
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+}

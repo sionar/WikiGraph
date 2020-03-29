@@ -4,9 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WikiGraph</title>
+    <link rel="stylesheet" type="text/css" href="reset.css">
+    <link rel="stylesheet" type="text/css" href="index.css">
     <script src="./main.js"></script>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
+    <div id="body-container">
+        <div id="header-bar">
+            <h1>WikiGraph</h1>
+            <h2>An interactive graph for generating a map between Wikipedia articles.</h2>
+        </div>
+        <div id="button-bar">
+            <label id="starting-label">Enter a starting node</label>
+            <input id="starting-input"></input>
+            <button id="starting-button">Start</button>
+            <button id="reset-button">Reset</button>
+        </div>
+        <div id="canvas-box">
+            <canvas id="canvas1"></canvas>
+        </div>
+    </div>
 </body>
 </html>
