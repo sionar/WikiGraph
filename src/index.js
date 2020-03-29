@@ -1,7 +1,13 @@
 import { nodes, edges } from './store'
+const wtf = require('wtf_wikipedia');
 
 document.addEventListener('DOMContentLoaded', () => {
-  getPageLinks('Boston');
+  // getPageLinks('Boston');
+  wtf.fetch('Anime')
+    .then (doc => {
+      const links = doc.links().map(link => link.json())
+      console.log(links);
+    })
 })
 
 

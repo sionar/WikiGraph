@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/sionar/WikiGraph#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "wtf_wikipedia": "^8.1.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
