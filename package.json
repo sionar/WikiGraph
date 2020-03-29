@@ -1,0 +1,23 @@
+{
+  "name": "wikigraph",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack --watch --mode=development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sionar/WikiGraph.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sionar/WikiGraph/issues"
+  },
+  "homepage": "https://github.com/sionar/WikiGraph#readme",
+  "dependencies": {
+    "wtf_wikipedia": "^8.1.0"
+  },
+  "devDependencies": {}
+}
