@@ -97,6 +97,18 @@ eval("/* wtf_wikipedia 8.1.0 MIT */\n(function (global, factory) {\n   true ? mo
 
 /***/ }),
 
+/***/ "./src/actions.js":
+/*!************************!*\
+  !*** ./src/actions.js ***!
+  \************************/
+/*! exports provided: getLinks, reset */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"getLinks\", function() { return getLinks; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"reset\", function() { return reset; });\n/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ \"./src/store.js\");\n\nconst wtf = __webpack_require__(/*! wtf_wikipedia */ \"./node_modules/wtf_wikipedia/builds/wtf_wikipedia-client.js\");\n\nconst getLinks = name => {\n  wtf.fetch(name)\n  .then (doc => {\n    const links = doc.links().map(link => link.json())\n    _store__WEBPACK_IMPORTED_MODULE_0__[\"nodes\"][name] = links.slice(0,12);\n  })\n}\n\nconst reset = () => {\n  const keys = Object.keys(_store__WEBPACK_IMPORTED_MODULE_0__[\"nodes\"]);\n  keys.forEach(key => delete _store__WEBPACK_IMPORTED_MODULE_0__[\"nodes\"][key]);\n}\n\n\n\n//# sourceURL=webpack:///./src/actions.js?");
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -105,7 +117,7 @@ eval("/* wtf_wikipedia 8.1.0 MIT */\n(function (global, factory) {\n   true ? mo
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ \"./src/store.js\");\n\nconst wtf = __webpack_require__(/*! wtf_wikipedia */ \"./node_modules/wtf_wikipedia/builds/wtf_wikipedia-client.js\");\n\ndocument.addEventListener('DOMContentLoaded', () => {\n  \n})\n\nfunction getLinks(name, nodes) {\n  wtf.fetch(name)\n  .then (doc => {\n    const links = doc.links().map(link => link.json())\n    nodes[name] = links.slice(0,12);\n  })\n}\n\nfunction reset(nodes) {\n  const keys = Object.keys(nodes);\n  keys.forEach(key => delete nodes[key]);\n}\n\n\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ \"./src/store.js\");\n/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./actions */ \"./src/actions.js\");\n\n\n\n\ndocument.addEventListener('DOMContentLoaded', () => {\n  const startButton = document.getElementById('start-button');\n  const resetButton = document.getElementById('reset-button');\n  startButton.addEventListener('click', handleClickStart)\n  resetButton.addEventListener('click', handleClickReset)\n  window.nodes = _store__WEBPACK_IMPORTED_MODULE_0__[\"nodes\"];\n})\n\nconst handleClickStart = (e) => {\n  e.preventDefault();\n  const inputValue = document.getElementById('start-input').value;\n  if (inputValue) {\n    Object(_actions__WEBPACK_IMPORTED_MODULE_1__[\"getLinks\"])(inputValue)\n  }\n}\n\nconst handleClickReset = (e) => {\n  e.preventDefault();\n  Object(_actions__WEBPACK_IMPORTED_MODULE_1__[\"reset\"])();\n}\n\n\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ }),
 

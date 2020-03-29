@@ -34,12 +34,12 @@ h2 {
   align-items: center;
 }
 
-#starting-label {
+#start-label {
   margin-left: 20px;
-  font-size: 20px;
+  font-size: 16px;
 }
 
-#starting-input {
+#start-input {
   margin-left: 10px;
   width: 300px;
   height: 25px;
@@ -51,7 +51,7 @@ h2 {
   outline: none;
 }
 
-#starting-input:focus {
+#start-input:focus {
   border: 1px solid white;
 }
 
@@ -65,9 +65,20 @@ h2 {
   color: azure;
 }
 
+.button:hover {
+  background-color: rgba(46, 161, 228, 0.849);
+}
+
+#reset-button {
+  margin-right: 20px;
+}
+
 #canvas-box {
   display: flex;
   flex-grow: 1;
   width: 100%;
 }
 
+#canvas1 {
+  width: 100%;
+}

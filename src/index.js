@@ -1,20 +1,25 @@
-import { nodes } from './store'
-const wtf = require('wtf_wikipedia');
+import { nodes } from './store';
+import { getLinks, reset } from './actions';
+
 
 document.addEventListener('DOMContentLoaded', () => {
-  
+  const startButton = document.getElementById('start-button');
+  const resetButton = document.getElementById('reset-button');
+  startButton.addEventListener('click', handleClickStart)
+  resetButton.addEventListener('click', handleClickReset)
+  window.nodes = nodes;
 })
 
-function getLinks(name, nodes) {
-  wtf.fetch(name)
-  .then (doc => {
-    const links = doc.links().map(link => link.json())
-    nodes[name] = links.slice(0,12);
-  })
+const handleClickStart = (e) => {
+  e.preventDefault();
+  const inputValue = document.getElementById('start-input').value;
+  if (inputValue) {
+    getLinks(inputValue)
+  }
 }
 
-function reset(nodes) {
-  const keys = Object.keys(nodes);
-  keys.forEach(key => delete nodes[key]);
+const handleClickReset = (e) => {
+  e.preventDefault();
+  reset();
 }
 
