@@ -1,6 +1,8 @@
 import { nodes } from './store';
 
 const RADIUS = 50;
+let scale = 1;
+
 
 export const renderNodes = () => {
   const canvas = document.getElementById('canvas1');
@@ -26,7 +28,7 @@ const drawNode = nodeKey => {
   ctx.fillStyle = 'white';
   ctx.fillText(nodeKey, 0, 0);
   ctx.stroke();
-  ctx.setTransform(1,0,0,1,0,0);
+  ctx.setTransform(scale,0,0,scale,0,0);
 }
 
 export const renderEdges = () => {
@@ -59,7 +61,7 @@ export const renderEdges = () => {
       }
 
       ctx.stroke();
-      ctx.setTransform(1,0,0,1,0,0);
+      ctx.setTransform(scale,0,0,scale,0,0);
     })
   })
 
@@ -71,11 +73,10 @@ export const handleMouseScroll = (e) => {
   const ctx1 = canvas1.getContext('2d');
   const canvas2 = document.getElementById('canvas2');
   const ctx2 = canvas2.getContext('2d');
-  if (e.deltaY < 0) {
-    ctx1.scale(1.05, 1.05);
-    ctx2.scale(1.05, 1.05);
-  } else {
-    ctx1.scale(1/1.05, 1/1.05);
-    ctx2.scale(1/1.05, 1/1.05);
-  }
+  if (e.deltaY < 0)
+    scale *= 1.05;
+  else 
+    scale /= 1.05;
+  ctx1.setTransform(scale, 0, 0, scale, 0, 0);
+  ctx2.setTransform(scale, 0, 0, scale, 0, 0);
 }
