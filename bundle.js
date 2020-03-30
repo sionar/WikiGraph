@@ -9015,8 +9015,8 @@ const drawNode = nodeKey => {
   ctx.font = "bold 18px Calibri";
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
-  ctx.strokeStyle = 'white';
-  ctx.fillStyle = 'white';
+  ctx.strokeStyle = '#CCCCCC';
+  ctx.fillStyle = '#CCCCCC';
   ctx.fillText(nodeKey, 0, 0);
   ctx.stroke();
   ctx.setTransform(_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0,_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0);
@@ -9256,10 +9256,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderNodes"], 17);
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderEdges"], 17);
+  window.addEventListener('resize', handleResize);
   window.nodes = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"];
 })
 
-const handleClickStart = (e) => {
+
+const handleClickStart = e => {
   e.preventDefault();
   const inputValue = document.getElementById('start-input').value;
   if (inputValue) {
@@ -9267,12 +9269,21 @@ const handleClickStart = (e) => {
   }
 }
 
-const handleClickReset = (e) => {
+const handleClickReset = e => {
   e.preventDefault();
   Object(_actions__WEBPACK_IMPORTED_MODULE_1__["reset"])();
 }
 
-
+const handleResize = e => {
+  e.preventDefault();
+  const canvas1 = document.getElementById('canvas1');
+  canvas1.width = window.innerWidth;
+  canvas1.height = window.innerHeight;  
+  
+  const canvas2 = document.getElementById('canvas2');
+  canvas2.width = window.innerWidth;
+  canvas2.height = window.innerHeight;
+}
 
 /***/ }),
 

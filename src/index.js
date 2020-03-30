@@ -31,10 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setInterval(renderNodes, 17);
   setInterval(renderEdges, 17);
+  window.addEventListener('resize', handleResize);
   window.nodes = nodes;
 })
 
-const handleClickStart = (e) => {
+
+const handleClickStart = e => {
   e.preventDefault();
   const inputValue = document.getElementById('start-input').value;
   if (inputValue) {
@@ -42,8 +44,18 @@ const handleClickStart = (e) => {
   }
 }
 
-const handleClickReset = (e) => {
+const handleClickReset = e => {
   e.preventDefault();
   reset();
 }
 
+const handleResize = e => {
+  e.preventDefault();
+  const canvas1 = document.getElementById('canvas1');
+  canvas1.width = window.innerWidth;
+  canvas1.height = window.innerHeight;  
+  
+  const canvas2 = document.getElementById('canvas2');
+  canvas2.width = window.innerWidth;
+  canvas2.height = window.innerHeight;
+}

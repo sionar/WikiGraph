@@ -22,8 +22,8 @@ const drawNode = nodeKey => {
   ctx.font = "bold 18px Calibri";
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
-  ctx.strokeStyle = 'white';
-  ctx.fillStyle = 'white';
+  ctx.strokeStyle = '#CCCCCC';
+  ctx.fillStyle = '#CCCCCC';
   ctx.fillText(nodeKey, 0, 0);
   ctx.stroke();
   ctx.setTransform(scale,0,0,scale,0,0);
