@@ -8936,13 +8936,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reset", function() { return reset; });
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
 
-const wtf = __webpack_require__(/*! wtf_wikipedia */ "./node_modules/wtf_wikipedia/builds/wtf_wikipedia-client.js");
 
-const getLinks = name => {
-  wtf.fetch(name)
+const wiki = __webpack_require__(/*! wtf_wikipedia */ "./node_modules/wtf_wikipedia/builds/wtf_wikipedia-client.js");
+
+const getLinks = (name, starting) => {
+  wiki.fetch(name)
   .then (doc => {
     const links = doc.links().map(link => link.json())
-    _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name] = links.slice(0,12);
+    _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name] = {};
+    _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].links = links.slice(0,8);
+    if (starting) {
+      const canvas = document.getElementById('canvas1');
+      _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].position = {x: canvas.width/2, y: canvas.height/2};
+    }
   })
 }
 
@@ -8952,6 +8958,65 @@ const reset = () => {
 }
 
 
+
+/***/ }),
+
+/***/ "./src/canvas.js":
+/*!***********************!*\
+  !*** ./src/canvas.js ***!
+  \***********************/
+/*! exports provided: renderNodes, renderEdges, handleMouseScroll */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderNodes", function() { return renderNodes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderEdges", function() { return renderEdges; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseScroll", function() { return handleMouseScroll; });
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
+
+
+const RADIUS = 50;
+
+const renderNodes = () => {
+  const canvas = document.getElementById('canvas1');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const nodeKeys = Object.keys(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"]);
+  nodeKeys.forEach(nodeKey => drawNode(nodeKey));
+}
+
+const drawNode = nodeKey => {
+  const canvas = document.getElementById('canvas1');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][nodeKey];
+  ctx.beginPath();
+  ctx.fillStyle = '#B8D9FF';
+  ctx.arc(node.position.x, node.position.y, RADIUS, 0, 2*Math.PI);
+  ctx.fill();
+  ctx.font = "bold 48px Calibri";
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "center";
+  ctx.strokeStyle = 'white';
+  ctx.fillStyle = 'white';
+  ctx.fillText(nodeKey, node.position.x, node.position.y);
+  ctx.stroke();
+}
+
+const renderEdges = () => {
+  const canvas = document.getElementById('canvas2');
+  const ctx = canvas.getContext('2d');
+  
+
+}
+
+const handleMouseScroll = (e) => {
+  e.preventDefault();
+  const canvas = document.getElementById('canvas1');
+  const ctx = canvas.getContext('2d');
+  e.deltaY < 0 ? ctx.scale(1.05, 1.05) : ctx.scale(1/1.05, 1/1.05);
+}
 
 /***/ }),
 
@@ -8966,6 +9031,8 @@ const reset = () => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
 /* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./actions */ "./src/actions.js");
+/* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./canvas */ "./src/canvas.js");
+
 
 
 
@@ -8973,8 +9040,20 @@ __webpack_require__.r(__webpack_exports__);
 document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
   const resetButton = document.getElementById('reset-button');
+  
   startButton.addEventListener('click', handleClickStart)
   resetButton.addEventListener('click', handleClickReset)
+  
+  const canvas1 = document.getElementById('canvas1');
+  canvas1.width = window.innerWidth;
+  canvas1.height = window.innerHeight;  
+  
+  const canvas2 = document.getElementById('canvas2');
+  canvas2.width = window.innerWidth;
+  canvas2.height = window.innerHeight;
+  canvas2.parentElement.addEventListener('wheel', _canvas__WEBPACK_IMPORTED_MODULE_2__["handleMouseScroll"])
+  setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderNodes"], 17);
+  setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderEdges"], 17);
   window.nodes = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"];
 })
 
@@ -8982,7 +9061,7 @@ const handleClickStart = (e) => {
   e.preventDefault();
   const inputValue = document.getElementById('start-input').value;
   if (inputValue) {
-    Object(_actions__WEBPACK_IMPORTED_MODULE_1__["getLinks"])(inputValue)
+    Object(_actions__WEBPACK_IMPORTED_MODULE_1__["getLinks"])(inputValue, true)
   }
 }
 
