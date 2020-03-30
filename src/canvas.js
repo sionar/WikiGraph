@@ -1,12 +1,11 @@
-import { nodes } from './store';
-import { scale, xPan, yPan } from './events';
+import { nodes, RADIUS, EDGE_LENGTH } from './store';
+import { scale, xPan, yPan, activeEdge } from './events';
 
-const RADIUS = 50;
 
 export const renderNodes = () => {
   const canvas = document.getElementById('canvas1');
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width / scale, canvas.height / scale);
   const nodeKeys = Object.keys(nodes);
   nodeKeys.forEach(nodeKey => drawNode(nodeKey));
 }
@@ -33,7 +32,7 @@ const drawNode = nodeKey => {
 export const renderEdges = () => {
   const canvas = document.getElementById('canvas2');
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width / scale, canvas.height / scale);
   const nodeKeys = Object.keys(nodes);
   let node, rotation;
   nodeKeys.forEach(nodeKey => {
@@ -45,13 +44,17 @@ export const renderEdges = () => {
       ctx.beginPath();
       ctx.moveTo(0,0);
       ctx.lineWidth = 5;
-      ctx.strokeStyle = "#CCCCCC";
-      ctx.lineTo(0,200);
+      if (activeEdge && link.page === activeEdge.page) {
+        ctx.strokeStyle = "#000000";
+        ctx.fillStyle = "#000000";
+      }
+      else {
+        ctx.strokeStyle = "#CCCCCC";
+        ctx.fillStyle = '#AAAAAA';
+      }
+      ctx.lineTo(EDGE_LENGTH, 0);
       ctx.stroke();
-
       ctx.font = "18px Calibri";
-      ctx.strokeStyle = '#AAAAAA';
-      ctx.fillStyle = '#AAAAAA';
       if (rotation >= Math.PI/2 && rotation < Math.PI * 3/2) {
         ctx.rotate(Math.PI);
         ctx.fillText(link.page, -175, -15);
@@ -59,7 +62,6 @@ export const renderEdges = () => {
         ctx.fillText(link.page, 100, 30);
       }
 
-      ctx.stroke();
       ctx.setTransform(scale,0,0,scale,0,0);
     })
   })

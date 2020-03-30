@@ -8977,12 +8977,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const RADIUS = 50;
 
 const renderNodes = () => {
   const canvas = document.getElementById('canvas1');
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width / _events__WEBPACK_IMPORTED_MODULE_1__["scale"], canvas.height / _events__WEBPACK_IMPORTED_MODULE_1__["scale"]);
   const nodeKeys = Object.keys(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"]);
   nodeKeys.forEach(nodeKey => drawNode(nodeKey));
 }
@@ -8994,7 +8993,7 @@ const drawNode = nodeKey => {
   ctx.translate(node.position.x + _events__WEBPACK_IMPORTED_MODULE_1__["xPan"], node.position.y + _events__WEBPACK_IMPORTED_MODULE_1__["yPan"]);
   ctx.beginPath();
   ctx.fillStyle = '#B8D9FF';
-  ctx.arc(0, 0, RADIUS, 0, 2*Math.PI);
+  ctx.arc(0, 0, _store__WEBPACK_IMPORTED_MODULE_0__["RADIUS"], 0, 2*Math.PI);
   ctx.fill();
   ctx.font = "bold 24px Calibri";
   ctx.textBaseline = "middle";
@@ -9009,7 +9008,7 @@ const drawNode = nodeKey => {
 const renderEdges = () => {
   const canvas = document.getElementById('canvas2');
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width / _events__WEBPACK_IMPORTED_MODULE_1__["scale"], canvas.height / _events__WEBPACK_IMPORTED_MODULE_1__["scale"]);
   const nodeKeys = Object.keys(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"]);
   let node, rotation;
   nodeKeys.forEach(nodeKey => {
@@ -9021,13 +9020,17 @@ const renderEdges = () => {
       ctx.beginPath();
       ctx.moveTo(0,0);
       ctx.lineWidth = 5;
-      ctx.strokeStyle = "#CCCCCC";
-      ctx.lineTo(0,200);
+      if (_events__WEBPACK_IMPORTED_MODULE_1__["activeEdge"] && link.page === _events__WEBPACK_IMPORTED_MODULE_1__["activeEdge"].page) {
+        ctx.strokeStyle = "#000000";
+        ctx.fillStyle = "#000000";
+      }
+      else {
+        ctx.strokeStyle = "#CCCCCC";
+        ctx.fillStyle = '#AAAAAA';
+      }
+      ctx.lineTo(_store__WEBPACK_IMPORTED_MODULE_0__["EDGE_LENGTH"], 0);
       ctx.stroke();
-
       ctx.font = "18px Calibri";
-      ctx.strokeStyle = '#AAAAAA';
-      ctx.fillStyle = '#AAAAAA';
       if (rotation >= Math.PI/2 && rotation < Math.PI * 3/2) {
         ctx.rotate(Math.PI);
         ctx.fillText(link.page, -175, -15);
@@ -9035,7 +9038,6 @@ const renderEdges = () => {
         ctx.fillText(link.page, 100, 30);
       }
 
-      ctx.stroke();
       ctx.setTransform(_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0,_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0);
     })
   })
@@ -9051,7 +9053,7 @@ const renderEdges = () => {
 /*!***********************!*\
   !*** ./src/events.js ***!
   \***********************/
-/*! exports provided: scale, xPan, yPan, handleMouseScroll, handleMouseMove, handleMouseDown, handleMouseUp */
+/*! exports provided: scale, xPan, yPan, activeNodeKey, activeEdge, handleMouseScroll, handleMouseDrag, handleMouseDown, handleMouseUp, handleMouseMove */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9059,13 +9061,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scale", function() { return scale; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "xPan", function() { return xPan; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "yPan", function() { return yPan; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "activeNodeKey", function() { return activeNodeKey; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "activeEdge", function() { return activeEdge; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseScroll", function() { return handleMouseScroll; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseMove", function() { return handleMouseMove; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseDrag", function() { return handleMouseDrag; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseDown", function() { return handleMouseDown; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseUp", function() { return handleMouseUp; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseMove", function() { return handleMouseMove; });
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
+
+
 let scale = 1;
 let xPan = 0;
 let yPan = 0;
+let activeNodeKey = null;
+let activeEdge = null;
 
 const handleMouseScroll = (e) => {
   e.preventDefault();
@@ -9081,19 +9091,43 @@ const handleMouseScroll = (e) => {
   ctx2.setTransform(scale, 0, 0, scale, 0, 0);
 }
 
-const handleMouseMove = (e) => {
+const handleMouseDrag = (e) => {
   xPan += e.movementX;
   yPan += e.movementY;
 }
 
 const handleMouseDown = (e) => {
   e.preventDefault();
-  document.addEventListener('mousemove', handleMouseMove);
+  document.addEventListener('mousemove', handleMouseDrag);
 }
 
 const handleMouseUp = e => {
   e.preventDefault();
-  document.removeEventListener('mousemove', handleMouseMove);
+  document.removeEventListener('mousemove', handleMouseDrag);
+}
+
+const handleMouseMove = e => {
+  const x = (e.offsetX) / scale - xPan;
+  const y = (e.offsetY + _store__WEBPACK_IMPORTED_MODULE_0__["SCREEN_OFFSET"]) / scale - yPan;
+  const nodeKeys = Object.keys(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"]);
+  let node, distSq, angle, idx;
+  nodeKeys.forEach(nodeKey => {
+    node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][nodeKey];
+    distSq = Math.pow((x - node.position.x),2) + Math.pow((y - node.position.y),2)
+    if (_store__WEBPACK_IMPORTED_MODULE_0__["RADIUS"]*_store__WEBPACK_IMPORTED_MODULE_0__["RADIUS"] < distSq && distSq < _store__WEBPACK_IMPORTED_MODULE_0__["EDGE_LENGTH"] * _store__WEBPACK_IMPORTED_MODULE_0__["EDGE_LENGTH"]) {
+      angle = Math.atan((y - node.position.y)/(x - node.position.x));
+      if (x - node.position.x < 0 && y - node.position.y > 0)
+        angle = Math.PI + angle;
+      else if ( x - node.position.x < 0 && y - node.position.y < 0)
+        angle = Math.PI + angle;
+      else if ( x- node.position.x > 0 && y - node.position.y < 0)
+        angle = 2 * Math.PI + angle;
+      idx = Math.floor(angle/ (2 * Math.PI / node.links.length));
+      activeEdge = node.links[idx];
+    } else {
+      activeEdge = null;
+    }
+  });
 }
 
 /***/ }),
@@ -9130,9 +9164,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const canvas2 = document.getElementById('canvas2');
   canvas2.width = window.innerWidth;
   canvas2.height = window.innerHeight;
-  canvas2.parentElement.addEventListener('wheel', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseScroll"]);
-  canvas1.parentElement.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseDown"]);
-  canvas1.parentElement.addEventListener('mouseup', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseUp"]);
+
+  const canvasContainer = canvas2.parentElement;
+
+  canvasContainer.addEventListener('wheel', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseScroll"]);
+  canvasContainer.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseDown"]);
+  canvasContainer.addEventListener('mouseup', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseUp"]);
+  canvasContainer.addEventListener('mousemove', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseMove"]);
+
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderNodes"], 17);
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderEdges"], 17);
   window.nodes = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"];
@@ -9159,14 +9198,19 @@ const handleClickReset = (e) => {
 /*!**********************!*\
   !*** ./src/store.js ***!
   \**********************/
-/*! exports provided: nodes */
+/*! exports provided: nodes, RADIUS, EDGE_LENGTH, SCREEN_OFFSET */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nodes", function() { return nodes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RADIUS", function() { return RADIUS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EDGE_LENGTH", function() { return EDGE_LENGTH; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SCREEN_OFFSET", function() { return SCREEN_OFFSET; });
 const nodes = {};
-
+const RADIUS = 50;
+const EDGE_LENGTH = 200;
+const SCREEN_OFFSET = 100;
 
 /***/ })
 
