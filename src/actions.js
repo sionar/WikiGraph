@@ -8,6 +8,7 @@ export const createNode = (name, prevNode, angle) => {
   .then (doc => {
     const links = doc.links().map(link => link.json())
     nodes[name] = {};
+    nodes[name].color = randomColor();
     nodes[name].links = links.slice(0,8);
     const canvas = document.getElementById('canvas1');
     if (!prevNode) {
@@ -27,3 +28,11 @@ export const reset = () => {
   setActiveNodeKey(null);
 }
 
+const randomColor = () => {
+  const chars = "0123456789abcdef"
+  let output = "#";
+  for (let i = 0; i < 6; i++) {
+    output += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return output;
+}

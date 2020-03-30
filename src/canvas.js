@@ -16,7 +16,7 @@ const drawNode = nodeKey => {
   const node = nodes[nodeKey];
   ctx.translate(node.position.x + xPan, node.position.y + yPan);
   ctx.beginPath();
-  ctx.fillStyle = '#B8D9FF';
+  ctx.fillStyle = node.color;
   ctx.arc(0, 0, RADIUS, 0, 2*Math.PI);
   ctx.fill();
   ctx.font = "bold 18px Calibri";
@@ -33,40 +33,41 @@ export const renderEdges = () => {
   const canvas = document.getElementById('canvas2');
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width / scale, canvas.height / scale);
-  if (activeNodeKey === null) {
-    return;
+  if (activeNodeKey) {
+    let node, rotation;
+    node = nodes[activeNodeKey];
+    if (node) {
+      node.links.forEach((link, idx) => {
+        ctx.translate(node.position.x + xPan, node.position.y + yPan);
+        rotation = idx * 2 * Math.PI / node.links.length;
+        ctx.rotate(rotation);
+        ctx.beginPath();
+        ctx.moveTo(0,0);
+        ctx.lineWidth = 5;
+        ctx.textAlign = "center";
+        if (activeEdge && link.page === activeEdge.page) {
+          ctx.strokeStyle = "#000000";
+          ctx.fillStyle = "#000000";
+        }
+        else {
+          ctx.strokeStyle = "#CCCCCC";
+          ctx.fillStyle = '#AAAAAA';
+        }
+        ctx.lineTo(EDGE_LENGTH, 0);
+        ctx.stroke();
+        ctx.font = "18px Calibri";
+        if (rotation >= Math.PI/2 && rotation < Math.PI * 3/2) {
+          ctx.rotate(Math.PI);
+          ctx.fillText(link.page, -150, -15);
+        } else {
+          ctx.fillText(link.page, 150, 30);
+        }
+        
+        ctx.setTransform(scale,0,0,scale,0,0);
+      })
+    }
   }
-  let node, rotation;
-  node = nodes[activeNodeKey];
-  node.links.forEach((link, idx) => {
-    ctx.translate(node.position.x + xPan, node.position.y + yPan);
-    rotation = idx * 2 * Math.PI / node.links.length;
-    ctx.rotate(rotation);
-    ctx.beginPath();
-    ctx.moveTo(0,0);
-    ctx.lineWidth = 5;
-    ctx.textAlign = "center";
-    if (activeEdge && link.page === activeEdge.page) {
-      ctx.strokeStyle = "#000000";
-      ctx.fillStyle = "#000000";
-    }
-    else {
-      ctx.strokeStyle = "#CCCCCC";
-      ctx.fillStyle = '#AAAAAA';
-    }
-    ctx.lineTo(EDGE_LENGTH, 0);
-    ctx.stroke();
-    ctx.font = "18px Calibri";
-    if (rotation >= Math.PI/2 && rotation < Math.PI * 3/2) {
-      ctx.rotate(Math.PI);
-      ctx.fillText(link.page, -150, -15);
-    } else {
-      ctx.fillText(link.page, 150, 30);
-    }
-
-    ctx.setTransform(scale,0,0,scale,0,0);
-  })
-
+    
   edges.forEach(edge => {
     ctx.beginPath();
     ctx.moveTo(nodes[edge.node1].position.x + xPan, nodes[edge.node1].position.y + yPan);
@@ -76,5 +77,3 @@ export const renderEdges = () => {
     ctx.stroke();
   })
 }
-
-

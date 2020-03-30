@@ -53,7 +53,7 @@ export const handleMouseUp = e => {
 }
 
 export const handleMouseMove = e => {
-  if (!activeNodeKey)
+  if (!nodes[activeNodeKey])
     return;
 
   const x = (e.offsetX) / scale - xPan;
@@ -71,7 +71,7 @@ export const handleMouseMove = e => {
     else if ( x- node.position.x > 0 && y - node.position.y < 0)
       angle = 2 * Math.PI + angle;
     idx = Math.floor(angle/ (2 * Math.PI / node.links.length));
-    activeEdge = node.links[idx];
+    activeEdge = {page: node.links[idx].page, nodeKey: activeNodeKey};
   } else {
     activeEdge = null;
   };
@@ -82,6 +82,7 @@ export const handleClickNode = e => {
   const x = (e.offsetX) / scale - xPan;
   const y = (e.offsetY + SCREEN_Y_OFFSET) / scale - yPan;
   let node, distSq;
+  activeNodeKey = null;
   nodeKeys.forEach(nodeKey => {
     node = nodes[nodeKey];
     distSq = Math.pow((x - node.position.x),2) + Math.pow((y - node.position.y),2)
@@ -89,19 +90,19 @@ export const handleClickNode = e => {
       activeNodeKey = nodeKey;
     }
   })
-  if (!activeNodeKey) activeNodeKey = null; 
 }
 
 export const handleClickEdge = () => {
   if (activeEdge) {
-    const node = nodes[activeNodeKey];
+    const node = nodes[activeEdge.nodeKey];
     let angle;
     for (let i = 0; i < node.links.length; i++) {
       if (node.links[i].page === activeEdge.page) {
         angle = 2 * Math.PI * i / node.links.length;  
       }
     }
-    createNode(activeEdge.page, activeNodeKey, angle);
+    createNode(activeEdge.page, activeEdge.nodeKey, angle);
+    activeNodeKey = activeEdge.page;
   }
 }
 

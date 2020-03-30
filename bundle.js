@@ -8946,6 +8946,7 @@ const createNode = (name, prevNode, angle) => {
   .then (doc => {
     const links = doc.links().map(link => link.json())
     _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name] = {};
+    _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].color = randomColor();
     _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].links = links.slice(0,8);
     const canvas = document.getElementById('canvas1');
     if (!prevNode) {
@@ -8965,6 +8966,14 @@ const reset = () => {
   Object(_events__WEBPACK_IMPORTED_MODULE_1__["setActiveNodeKey"])(null);
 }
 
+const randomColor = () => {
+  const chars = "0123456789abcdef"
+  let output = "#";
+  for (let i = 0; i < 6; i++) {
+    output += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return output;
+}
 
 
 /***/ }),
@@ -9000,7 +9009,7 @@ const drawNode = nodeKey => {
   const node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][nodeKey];
   ctx.translate(node.position.x + _events__WEBPACK_IMPORTED_MODULE_1__["xPan"], node.position.y + _events__WEBPACK_IMPORTED_MODULE_1__["yPan"]);
   ctx.beginPath();
-  ctx.fillStyle = '#B8D9FF';
+  ctx.fillStyle = node.color;
   ctx.arc(0, 0, _store__WEBPACK_IMPORTED_MODULE_0__["RADIUS"], 0, 2*Math.PI);
   ctx.fill();
   ctx.font = "bold 18px Calibri";
@@ -9017,40 +9026,41 @@ const renderEdges = () => {
   const canvas = document.getElementById('canvas2');
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width / _events__WEBPACK_IMPORTED_MODULE_1__["scale"], canvas.height / _events__WEBPACK_IMPORTED_MODULE_1__["scale"]);
-  if (_events__WEBPACK_IMPORTED_MODULE_1__["activeNodeKey"] === null) {
-    return;
+  if (_events__WEBPACK_IMPORTED_MODULE_1__["activeNodeKey"]) {
+    let node, rotation;
+    node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][_events__WEBPACK_IMPORTED_MODULE_1__["activeNodeKey"]];
+    if (node) {
+      node.links.forEach((link, idx) => {
+        ctx.translate(node.position.x + _events__WEBPACK_IMPORTED_MODULE_1__["xPan"], node.position.y + _events__WEBPACK_IMPORTED_MODULE_1__["yPan"]);
+        rotation = idx * 2 * Math.PI / node.links.length;
+        ctx.rotate(rotation);
+        ctx.beginPath();
+        ctx.moveTo(0,0);
+        ctx.lineWidth = 5;
+        ctx.textAlign = "center";
+        if (_events__WEBPACK_IMPORTED_MODULE_1__["activeEdge"] && link.page === _events__WEBPACK_IMPORTED_MODULE_1__["activeEdge"].page) {
+          ctx.strokeStyle = "#000000";
+          ctx.fillStyle = "#000000";
+        }
+        else {
+          ctx.strokeStyle = "#CCCCCC";
+          ctx.fillStyle = '#AAAAAA';
+        }
+        ctx.lineTo(_store__WEBPACK_IMPORTED_MODULE_0__["EDGE_LENGTH"], 0);
+        ctx.stroke();
+        ctx.font = "18px Calibri";
+        if (rotation >= Math.PI/2 && rotation < Math.PI * 3/2) {
+          ctx.rotate(Math.PI);
+          ctx.fillText(link.page, -150, -15);
+        } else {
+          ctx.fillText(link.page, 150, 30);
+        }
+        
+        ctx.setTransform(_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0,_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0);
+      })
+    }
   }
-  let node, rotation;
-  node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][_events__WEBPACK_IMPORTED_MODULE_1__["activeNodeKey"]];
-  node.links.forEach((link, idx) => {
-    ctx.translate(node.position.x + _events__WEBPACK_IMPORTED_MODULE_1__["xPan"], node.position.y + _events__WEBPACK_IMPORTED_MODULE_1__["yPan"]);
-    rotation = idx * 2 * Math.PI / node.links.length;
-    ctx.rotate(rotation);
-    ctx.beginPath();
-    ctx.moveTo(0,0);
-    ctx.lineWidth = 5;
-    ctx.textAlign = "center";
-    if (_events__WEBPACK_IMPORTED_MODULE_1__["activeEdge"] && link.page === _events__WEBPACK_IMPORTED_MODULE_1__["activeEdge"].page) {
-      ctx.strokeStyle = "#000000";
-      ctx.fillStyle = "#000000";
-    }
-    else {
-      ctx.strokeStyle = "#CCCCCC";
-      ctx.fillStyle = '#AAAAAA';
-    }
-    ctx.lineTo(_store__WEBPACK_IMPORTED_MODULE_0__["EDGE_LENGTH"], 0);
-    ctx.stroke();
-    ctx.font = "18px Calibri";
-    if (rotation >= Math.PI/2 && rotation < Math.PI * 3/2) {
-      ctx.rotate(Math.PI);
-      ctx.fillText(link.page, -150, -15);
-    } else {
-      ctx.fillText(link.page, 150, 30);
-    }
-
-    ctx.setTransform(_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0,_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0);
-  })
-
+    
   _store__WEBPACK_IMPORTED_MODULE_0__["edges"].forEach(edge => {
     ctx.beginPath();
     ctx.moveTo(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"][edge.node1].position.x + _events__WEBPACK_IMPORTED_MODULE_1__["xPan"], _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][edge.node1].position.y + _events__WEBPACK_IMPORTED_MODULE_1__["yPan"]);
@@ -9060,9 +9070,6 @@ const renderEdges = () => {
     ctx.stroke();
   })
 }
-
-
-
 
 /***/ }),
 
@@ -9145,7 +9152,7 @@ const handleMouseUp = e => {
 }
 
 const handleMouseMove = e => {
-  if (!activeNodeKey)
+  if (!_store__WEBPACK_IMPORTED_MODULE_0__["nodes"][activeNodeKey])
     return;
 
   const x = (e.offsetX) / scale - xPan;
@@ -9163,7 +9170,7 @@ const handleMouseMove = e => {
     else if ( x- node.position.x > 0 && y - node.position.y < 0)
       angle = 2 * Math.PI + angle;
     idx = Math.floor(angle/ (2 * Math.PI / node.links.length));
-    activeEdge = node.links[idx];
+    activeEdge = {page: node.links[idx].page, nodeKey: activeNodeKey};
   } else {
     activeEdge = null;
   };
@@ -9174,6 +9181,7 @@ const handleClickNode = e => {
   const x = (e.offsetX) / scale - xPan;
   const y = (e.offsetY + _store__WEBPACK_IMPORTED_MODULE_0__["SCREEN_Y_OFFSET"]) / scale - yPan;
   let node, distSq;
+  activeNodeKey = null;
   nodeKeys.forEach(nodeKey => {
     node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][nodeKey];
     distSq = Math.pow((x - node.position.x),2) + Math.pow((y - node.position.y),2)
@@ -9181,19 +9189,19 @@ const handleClickNode = e => {
       activeNodeKey = nodeKey;
     }
   })
-  if (!activeNodeKey) activeNodeKey = null; 
 }
 
 const handleClickEdge = () => {
   if (activeEdge) {
-    const node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][activeNodeKey];
+    const node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][activeEdge.nodeKey];
     let angle;
     for (let i = 0; i < node.links.length; i++) {
       if (node.links[i].page === activeEdge.page) {
         angle = 2 * Math.PI * i / node.links.length;  
       }
     }
-    Object(_actions__WEBPACK_IMPORTED_MODULE_1__["createNode"])(activeEdge.page, activeNodeKey, angle);
+    Object(_actions__WEBPACK_IMPORTED_MODULE_1__["createNode"])(activeEdge.page, activeEdge.nodeKey, angle);
+    activeNodeKey = activeEdge.page;
   }
 }
 
