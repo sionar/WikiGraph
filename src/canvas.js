@@ -19,7 +19,7 @@ const drawNode = nodeKey => {
   ctx.fillStyle = '#B8D9FF';
   ctx.arc(0, 0, RADIUS, 0, 2*Math.PI);
   ctx.fill();
-  ctx.font = "bold 24px Calibri";
+  ctx.font = "bold 18px Calibri";
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
   ctx.strokeStyle = 'white';
@@ -44,6 +44,7 @@ export const renderEdges = () => {
       ctx.beginPath();
       ctx.moveTo(0,0);
       ctx.lineWidth = 5;
+      ctx.textAlign = "center";
       if (activeEdge && link.page === activeEdge.page) {
         ctx.strokeStyle = "#000000";
         ctx.fillStyle = "#000000";
@@ -57,9 +58,9 @@ export const renderEdges = () => {
       ctx.font = "18px Calibri";
       if (rotation >= Math.PI/2 && rotation < Math.PI * 3/2) {
         ctx.rotate(Math.PI);
-        ctx.fillText(link.page, -175, -15);
+        ctx.fillText(link.page, -150, -15);
       } else {
-        ctx.fillText(link.page, 100, 30);
+        ctx.fillText(link.page, 150, 30);
       }
 
       ctx.setTransform(scale,0,0,scale,0,0);

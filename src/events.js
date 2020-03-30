@@ -1,4 +1,5 @@
 import { nodes, RADIUS, EDGE_LENGTH, SCREEN_OFFSET } from './store';
+import { createNode } from './actions';
 
 export let scale = 1;
 export let xPan = 0;
@@ -52,9 +53,24 @@ export const handleMouseMove = e => {
       else if ( x- node.position.x > 0 && y - node.position.y < 0)
         angle = 2 * Math.PI + angle;
       idx = Math.floor(angle/ (2 * Math.PI / node.links.length));
+      activeNodeKey = nodeKey;
       activeEdge = node.links[idx];
     } else {
+      activeNodeKey = null;
       activeEdge = null;
     }
   });
+}
+
+export const handleClickEdge = () => {
+  if (activeEdge) {
+    const node = nodes[activeNodeKey];
+    let angle;
+    for (let i = 0; i < node.links.length; i++) {
+      if (node.links[i].page === activeEdge.page) {
+        angle = 2 * Math.PI * i / node.links.length;  
+      }
+    }
+    createNode(activeEdge.page, activeNodeKey, angle);
+  }
 }

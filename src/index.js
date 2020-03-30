@@ -1,7 +1,7 @@
 import { nodes } from './store';
-import { getLinks, reset } from './actions';
+import { createNode, reset } from './actions';
 import { renderNodes, renderEdges} from './canvas';
-import { handleMouseScroll, handleMouseDown, handleMouseUp, handleMouseMove } from './events';
+import { handleMouseScroll, handleMouseDown, handleMouseUp, handleMouseMove, handleClickEdge } from './events';
 
 document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   canvasContainer.addEventListener('mousedown', handleMouseDown);
   canvasContainer.addEventListener('mouseup', handleMouseUp);
   canvasContainer.addEventListener('mousemove', handleMouseMove);
+  canvasContainer.addEventListener('mousedown', handleClickEdge);
 
   setInterval(renderNodes, 17);
   setInterval(renderEdges, 17);
@@ -34,7 +35,7 @@ const handleClickStart = (e) => {
   e.preventDefault();
   const inputValue = document.getElementById('start-input').value;
   if (inputValue) {
-    getLinks(inputValue, true)
+    createNode(inputValue, null);
   }
 }
 

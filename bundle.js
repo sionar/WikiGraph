@@ -8927,27 +8927,32 @@
 /*!************************!*\
   !*** ./src/actions.js ***!
   \************************/
-/*! exports provided: getLinks, reset */
+/*! exports provided: createNode, reset */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLinks", function() { return getLinks; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createNode", function() { return createNode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reset", function() { return reset; });
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
 
 
 const wiki = __webpack_require__(/*! wtf_wikipedia */ "./node_modules/wtf_wikipedia/builds/wtf_wikipedia-client.js");
 
-const getLinks = (name, starting) => {
+const createNode = (name, prevNode, angle) => {
   wiki.fetch(name)
   .then (doc => {
     const links = doc.links().map(link => link.json())
     _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name] = {};
     _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].links = links.slice(0,8);
-    if (starting) {
-      const canvas = document.getElementById('canvas1');
+    const canvas = document.getElementById('canvas1');
+    if (!prevNode) {
       _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].position = {x: canvas.width/2, y: canvas.height/2};
+    } else {
+      const xPos = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][prevNode].position.x + _store__WEBPACK_IMPORTED_MODULE_0__["NODE_DISTANCE"] * Math.cos(angle); 
+      const yPos = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][prevNode].position.y + _store__WEBPACK_IMPORTED_MODULE_0__["NODE_DISTANCE"] * Math.sin(angle); 
+      _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].position = {x: xPos, y: yPos};
+      _store__WEBPACK_IMPORTED_MODULE_0__["edges"].push({node1: prevNode, node2: name});
     }
   })
 }
@@ -8995,7 +9000,7 @@ const drawNode = nodeKey => {
   ctx.fillStyle = '#B8D9FF';
   ctx.arc(0, 0, _store__WEBPACK_IMPORTED_MODULE_0__["RADIUS"], 0, 2*Math.PI);
   ctx.fill();
-  ctx.font = "bold 24px Calibri";
+  ctx.font = "bold 18px Calibri";
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
   ctx.strokeStyle = 'white';
@@ -9020,6 +9025,7 @@ const renderEdges = () => {
       ctx.beginPath();
       ctx.moveTo(0,0);
       ctx.lineWidth = 5;
+      ctx.textAlign = "center";
       if (_events__WEBPACK_IMPORTED_MODULE_1__["activeEdge"] && link.page === _events__WEBPACK_IMPORTED_MODULE_1__["activeEdge"].page) {
         ctx.strokeStyle = "#000000";
         ctx.fillStyle = "#000000";
@@ -9033,9 +9039,9 @@ const renderEdges = () => {
       ctx.font = "18px Calibri";
       if (rotation >= Math.PI/2 && rotation < Math.PI * 3/2) {
         ctx.rotate(Math.PI);
-        ctx.fillText(link.page, -175, -15);
+        ctx.fillText(link.page, -150, -15);
       } else {
-        ctx.fillText(link.page, 100, 30);
+        ctx.fillText(link.page, 150, 30);
       }
 
       ctx.setTransform(_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0,_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0);
@@ -9053,7 +9059,7 @@ const renderEdges = () => {
 /*!***********************!*\
   !*** ./src/events.js ***!
   \***********************/
-/*! exports provided: scale, xPan, yPan, activeNodeKey, activeEdge, handleMouseScroll, handleMouseDrag, handleMouseDown, handleMouseUp, handleMouseMove */
+/*! exports provided: scale, xPan, yPan, activeNodeKey, activeEdge, handleMouseScroll, handleMouseDrag, handleMouseDown, handleMouseUp, handleMouseMove, handleClickEdge */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9068,7 +9074,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseDown", function() { return handleMouseDown; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseUp", function() { return handleMouseUp; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseMove", function() { return handleMouseMove; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleClickEdge", function() { return handleClickEdge; });
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./actions */ "./src/actions.js");
+
 
 
 let scale = 1;
@@ -9123,11 +9132,26 @@ const handleMouseMove = e => {
       else if ( x- node.position.x > 0 && y - node.position.y < 0)
         angle = 2 * Math.PI + angle;
       idx = Math.floor(angle/ (2 * Math.PI / node.links.length));
+      activeNodeKey = nodeKey;
       activeEdge = node.links[idx];
     } else {
+      activeNodeKey = null;
       activeEdge = null;
     }
   });
+}
+
+const handleClickEdge = () => {
+  if (activeEdge) {
+    const node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][activeNodeKey];
+    let angle;
+    for (let i = 0; i < node.links.length; i++) {
+      if (node.links[i].page === activeEdge.page) {
+        angle = 2 * Math.PI * i / node.links.length;  
+      }
+    }
+    Object(_actions__WEBPACK_IMPORTED_MODULE_1__["createNode"])(activeEdge.page, activeNodeKey, angle);
+  }
 }
 
 /***/ }),
@@ -9171,6 +9195,7 @@ document.addEventListener('DOMContentLoaded', () => {
   canvasContainer.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseDown"]);
   canvasContainer.addEventListener('mouseup', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseUp"]);
   canvasContainer.addEventListener('mousemove', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseMove"]);
+  canvasContainer.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleClickEdge"]);
 
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderNodes"], 17);
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderEdges"], 17);
@@ -9181,7 +9206,7 @@ const handleClickStart = (e) => {
   e.preventDefault();
   const inputValue = document.getElementById('start-input').value;
   if (inputValue) {
-    Object(_actions__WEBPACK_IMPORTED_MODULE_1__["getLinks"])(inputValue, true)
+    Object(_actions__WEBPACK_IMPORTED_MODULE_1__["createNode"])(inputValue, null);
   }
 }
 
@@ -9198,19 +9223,23 @@ const handleClickReset = (e) => {
 /*!**********************!*\
   !*** ./src/store.js ***!
   \**********************/
-/*! exports provided: nodes, RADIUS, EDGE_LENGTH, SCREEN_OFFSET */
+/*! exports provided: nodes, edges, RADIUS, EDGE_LENGTH, SCREEN_OFFSET, NODE_DISTANCE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nodes", function() { return nodes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edges", function() { return edges; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RADIUS", function() { return RADIUS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EDGE_LENGTH", function() { return EDGE_LENGTH; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SCREEN_OFFSET", function() { return SCREEN_OFFSET; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NODE_DISTANCE", function() { return NODE_DISTANCE; });
 const nodes = {};
+const edges = [];
 const RADIUS = 50;
 const EDGE_LENGTH = 200;
 const SCREEN_OFFSET = 100;
+const NODE_DISTANCE = 300;
 
 /***/ })
 
