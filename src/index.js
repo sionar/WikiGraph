@@ -2,15 +2,12 @@ import { nodes } from './store';
 import { createNode, reset } from './actions';
 import { renderNodes, renderEdges} from './canvas';
 import { handleMouseScroll, handleMouseDown, handleMouseUp, handleMouseMove, 
-         handleClickNode, handleClickEdge } from './events';
+         handleClickNode, handleClickEdge, handleResize } from './events';
 
          
 document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
-  const resetButton = document.getElementById('reset-button');
-  
-  startButton.addEventListener('click', handleClickStart)
-  resetButton.addEventListener('click', handleClickReset)
+  startButton.addEventListener('click', handleClick)
   
   const canvas1 = document.getElementById('canvas1');
   canvas1.width = window.innerWidth;
@@ -36,26 +33,16 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 
-const handleClickStart = e => {
+const handleClick = e => {
   e.preventDefault();
-  const inputValue = document.getElementById('start-input').value;
-  if (inputValue) {
-    createNode(inputValue, null);
-  }
-}
-
-const handleClickReset = e => {
-  e.preventDefault();
-  reset();
-}
-
-const handleResize = e => {
-  e.preventDefault();
-  const canvas1 = document.getElementById('canvas1');
-  canvas1.width = window.innerWidth;
-  canvas1.height = window.innerHeight;  
-  
-  const canvas2 = document.getElementById('canvas2');
-  canvas2.width = window.innerWidth;
-  canvas2.height = window.innerHeight;
+  const button = e.target;
+  if (button.innerText === 'Start') {
+    button.innerText = 'Reset';
+    const inputValue = document.getElementById('start-input').value;
+    if (inputValue)
+      createNode(inputValue, null);
+  } else {
+      button.innerText = 'Start';
+      reset();
+    }
 }

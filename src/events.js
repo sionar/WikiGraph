@@ -109,3 +109,14 @@ export const handleClickEdge = () => {
 export const setActiveNodeKey = key => {
   activeNodeKey = key;
 }
+
+export const handleResize = e => {
+  e.preventDefault();
+  const canvas1 = document.getElementById('canvas1');
+  canvas1.width = window.innerWidth;
+  canvas1.height = window.innerHeight;  
+  
+  const canvas2 = document.getElementById('canvas2');
+  canvas2.width = window.innerWidth;
+  canvas2.height = window.innerHeight;
+}

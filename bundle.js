@@ -9077,7 +9077,7 @@ const renderEdges = () => {
 /*!***********************!*\
   !*** ./src/events.js ***!
   \***********************/
-/*! exports provided: scale, xPan, yPan, activeNodeKey, activeEdge, handleMouseScroll, handleMouseDrag, handleMouseDown, handleMouseUp, handleMouseMove, handleClickNode, handleClickEdge, setActiveNodeKey */
+/*! exports provided: scale, xPan, yPan, activeNodeKey, activeEdge, handleMouseScroll, handleMouseDrag, handleMouseDown, handleMouseUp, handleMouseMove, handleClickNode, handleClickEdge, setActiveNodeKey, handleResize */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9095,6 +9095,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleClickNode", function() { return handleClickNode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleClickEdge", function() { return handleClickEdge; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setActiveNodeKey", function() { return setActiveNodeKey; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleResize", function() { return handleResize; });
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
 /* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./actions */ "./src/actions.js");
 
@@ -9209,6 +9210,17 @@ const setActiveNodeKey = key => {
   activeNodeKey = key;
 }
 
+const handleResize = e => {
+  e.preventDefault();
+  const canvas1 = document.getElementById('canvas1');
+  canvas1.width = window.innerWidth;
+  canvas1.height = window.innerHeight;  
+  
+  const canvas2 = document.getElementById('canvas2');
+  canvas2.width = window.innerWidth;
+  canvas2.height = window.innerHeight;
+}
+
 /***/ }),
 
 /***/ "./src/index.js":
@@ -9232,10 +9244,7 @@ __webpack_require__.r(__webpack_exports__);
          
 document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
-  const resetButton = document.getElementById('reset-button');
-  
-  startButton.addEventListener('click', handleClickStart)
-  resetButton.addEventListener('click', handleClickReset)
+  startButton.addEventListener('click', handleClick)
   
   const canvas1 = document.getElementById('canvas1');
   canvas1.width = window.innerWidth;
@@ -9256,33 +9265,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderNodes"], 17);
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderEdges"], 17);
-  window.addEventListener('resize', handleResize);
+  window.addEventListener('resize', _events__WEBPACK_IMPORTED_MODULE_3__["handleResize"]);
   window.nodes = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"];
 })
 
 
-const handleClickStart = e => {
+const handleClick = e => {
   e.preventDefault();
-  const inputValue = document.getElementById('start-input').value;
-  if (inputValue) {
-    Object(_actions__WEBPACK_IMPORTED_MODULE_1__["createNode"])(inputValue, null);
-  }
-}
-
-const handleClickReset = e => {
-  e.preventDefault();
-  Object(_actions__WEBPACK_IMPORTED_MODULE_1__["reset"])();
-}
-
-const handleResize = e => {
-  e.preventDefault();
-  const canvas1 = document.getElementById('canvas1');
-  canvas1.width = window.innerWidth;
-  canvas1.height = window.innerHeight;  
-  
-  const canvas2 = document.getElementById('canvas2');
-  canvas2.width = window.innerWidth;
-  canvas2.height = window.innerHeight;
+  const button = e.target;
+  if (button.innerText === 'Start') {
+    button.innerText = 'Reset';
+    const inputValue = document.getElementById('start-input').value;
+    if (inputValue)
+      Object(_actions__WEBPACK_IMPORTED_MODULE_1__["createNode"])(inputValue, null);
+  } else {
+      button.innerText = 'Start';
+      Object(_actions__WEBPACK_IMPORTED_MODULE_1__["reset"])();
+    }
 }
 
 /***/ }),
