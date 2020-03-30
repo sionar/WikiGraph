@@ -32,8 +32,8 @@ export const handleMouseDrag = e => {
     distSq = Math.pow((x - node.position.x),2) + Math.pow((y - node.position.y),2)
     if (distSq < RADIUS*RADIUS ) {
       foundNode = true;
-      node.position.x += e.movementX;
-      node.position.y += e.movementY;
+      node.position.x = node.position.x + e.movementX / scale;
+      node.position.y = node.position.y + e.movementY / scale;
     }
   })
   if (!foundNode) {
