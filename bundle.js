@@ -9050,6 +9050,16 @@ const renderEdges = () => {
 
     ctx.setTransform(_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0,_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0);
   })
+  _store__WEBPACK_IMPORTED_MODULE_0__["edges"].forEach(edge => {
+    ctx.beginPath();
+    ctx.moveTo(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"][edge.node1].position.x + _events__WEBPACK_IMPORTED_MODULE_1__["xPan"], _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][edge.node1].position.y + _events__WEBPACK_IMPORTED_MODULE_1__["yPan"]);
+    ctx.lineWidth = 5;
+    if (_events__WEBPACK_IMPORTED_MODULE_1__["activeEdge"] && link.page === _events__WEBPACK_IMPORTED_MODULE_1__["activeEdge"].page) {
+      ctx.strokeStyle = "#000000";
+    }
+    ctx.lineTo(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"][edge.node2].position.x + _events__WEBPACK_IMPORTED_MODULE_1__["xPan"], _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][edge.node2].position.y + _events__WEBPACK_IMPORTED_MODULE_1__["yPan"]);
+    ctx.stroke();
+  })
 }
 
 

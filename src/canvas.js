@@ -1,4 +1,4 @@
-import { nodes, RADIUS, EDGE_LENGTH } from './store';
+import { nodes, edges, RADIUS, EDGE_LENGTH } from './store';
 import { scale, xPan, yPan, activeEdge, activeNodeKey } from './events';
 
 
@@ -65,6 +65,16 @@ export const renderEdges = () => {
     }
 
     ctx.setTransform(scale,0,0,scale,0,0);
+  })
+  edges.forEach(edge => {
+    ctx.beginPath();
+    ctx.moveTo(nodes[edge.node1].position.x + xPan, nodes[edge.node1].position.y + yPan);
+    ctx.lineWidth = 5;
+    if (activeEdge && link.page === activeEdge.page) {
+      ctx.strokeStyle = "#000000";
+    }
+    ctx.lineTo(nodes[edge.node2].position.x + xPan, nodes[edge.node2].position.y + yPan);
+    ctx.stroke();
   })
 }
 
