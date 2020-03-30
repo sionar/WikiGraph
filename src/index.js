@@ -1,7 +1,7 @@
 import { nodes } from './store';
 import { getLinks, reset } from './actions';
-import { renderNodes, renderEdges, handleMouseScroll } from './canvas';
-
+import { renderNodes, renderEdges} from './canvas';
+import { handleMouseScroll, handleMouseDown, handleMouseUp} from './events';
 
 document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
@@ -17,7 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const canvas2 = document.getElementById('canvas2');
   canvas2.width = window.innerWidth;
   canvas2.height = window.innerHeight;
-  canvas2.parentElement.addEventListener('wheel', handleMouseScroll)
+  canvas2.parentElement.addEventListener('wheel', handleMouseScroll);
+  canvas1.parentElement.addEventListener('mousedown', handleMouseDown);
+  canvas1.parentElement.addEventListener('mouseup', handleMouseUp);
   setInterval(renderNodes, 17);
   setInterval(renderEdges, 17);
   window.nodes = nodes;

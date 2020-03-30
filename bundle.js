@@ -8965,20 +8965,19 @@ const reset = () => {
 /*!***********************!*\
   !*** ./src/canvas.js ***!
   \***********************/
-/*! exports provided: renderNodes, renderEdges, handleMouseScroll */
+/*! exports provided: renderNodes, renderEdges */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderNodes", function() { return renderNodes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderEdges", function() { return renderEdges; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseScroll", function() { return handleMouseScroll; });
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
+/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./events */ "./src/events.js");
+
 
 
 const RADIUS = 50;
-let scale = 1;
-
 
 const renderNodes = () => {
   const canvas = document.getElementById('canvas1');
@@ -8992,7 +8991,7 @@ const drawNode = nodeKey => {
   const canvas = document.getElementById('canvas1');
   const ctx = canvas.getContext('2d');
   const node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][nodeKey];
-  ctx.translate(node.position.x, node.position.y);
+  ctx.translate(node.position.x + _events__WEBPACK_IMPORTED_MODULE_1__["xPan"], node.position.y + _events__WEBPACK_IMPORTED_MODULE_1__["yPan"]);
   ctx.beginPath();
   ctx.fillStyle = '#B8D9FF';
   ctx.arc(0, 0, RADIUS, 0, 2*Math.PI);
@@ -9004,7 +9003,7 @@ const drawNode = nodeKey => {
   ctx.fillStyle = 'white';
   ctx.fillText(nodeKey, 0, 0);
   ctx.stroke();
-  ctx.setTransform(scale,0,0,scale,0,0);
+  ctx.setTransform(_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0,_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0);
 }
 
 const renderEdges = () => {
@@ -9016,7 +9015,7 @@ const renderEdges = () => {
   nodeKeys.forEach(nodeKey => {
     node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][nodeKey];
     node.links.forEach((link, idx) => {
-      ctx.translate(node.position.x, node.position.y);
+      ctx.translate(node.position.x + _events__WEBPACK_IMPORTED_MODULE_1__["xPan"], node.position.y + _events__WEBPACK_IMPORTED_MODULE_1__["yPan"]);
       rotation = idx * 2 * Math.PI / node.links.length;
       ctx.rotate(rotation);
       ctx.beginPath();
@@ -9037,11 +9036,36 @@ const renderEdges = () => {
       }
 
       ctx.stroke();
-      ctx.setTransform(scale,0,0,scale,0,0);
+      ctx.setTransform(_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0,_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0);
     })
   })
 
 }
+
+
+
+
+/***/ }),
+
+/***/ "./src/events.js":
+/*!***********************!*\
+  !*** ./src/events.js ***!
+  \***********************/
+/*! exports provided: scale, xPan, yPan, handleMouseScroll, handleMouseMove, handleMouseDown, handleMouseUp */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scale", function() { return scale; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "xPan", function() { return xPan; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "yPan", function() { return yPan; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseScroll", function() { return handleMouseScroll; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseMove", function() { return handleMouseMove; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseDown", function() { return handleMouseDown; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleMouseUp", function() { return handleMouseUp; });
+let scale = 1;
+let xPan = 0;
+let yPan = 0;
 
 const handleMouseScroll = (e) => {
   e.preventDefault();
@@ -9055,6 +9079,21 @@ const handleMouseScroll = (e) => {
     scale /= 1.05;
   ctx1.setTransform(scale, 0, 0, scale, 0, 0);
   ctx2.setTransform(scale, 0, 0, scale, 0, 0);
+}
+
+const handleMouseMove = (e) => {
+  xPan += e.movementX;
+  yPan += e.movementY;
+}
+
+const handleMouseDown = (e) => {
+  e.preventDefault();
+  document.addEventListener('mousemove', handleMouseMove);
+}
+
+const handleMouseUp = e => {
+  e.preventDefault();
+  document.removeEventListener('mousemove', handleMouseMove);
 }
 
 /***/ }),
@@ -9071,6 +9110,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
 /* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./actions */ "./src/actions.js");
 /* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./canvas */ "./src/canvas.js");
+/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./events */ "./src/events.js");
 
 
 
@@ -9090,7 +9130,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const canvas2 = document.getElementById('canvas2');
   canvas2.width = window.innerWidth;
   canvas2.height = window.innerHeight;
-  canvas2.parentElement.addEventListener('wheel', _canvas__WEBPACK_IMPORTED_MODULE_2__["handleMouseScroll"])
+  canvas2.parentElement.addEventListener('wheel', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseScroll"]);
+  canvas1.parentElement.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseDown"]);
+  canvas1.parentElement.addEventListener('mouseup', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseUp"]);
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderNodes"], 17);
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderEdges"], 17);
   window.nodes = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"];

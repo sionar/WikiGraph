@@ -1,8 +1,7 @@
 import { nodes } from './store';
+import { scale, xPan, yPan } from './events';
 
 const RADIUS = 50;
-let scale = 1;
-
 
 export const renderNodes = () => {
   const canvas = document.getElementById('canvas1');
@@ -16,7 +15,7 @@ const drawNode = nodeKey => {
   const canvas = document.getElementById('canvas1');
   const ctx = canvas.getContext('2d');
   const node = nodes[nodeKey];
-  ctx.translate(node.position.x, node.position.y);
+  ctx.translate(node.position.x + xPan, node.position.y + yPan);
   ctx.beginPath();
   ctx.fillStyle = '#B8D9FF';
   ctx.arc(0, 0, RADIUS, 0, 2*Math.PI);
@@ -40,7 +39,7 @@ export const renderEdges = () => {
   nodeKeys.forEach(nodeKey => {
     node = nodes[nodeKey];
     node.links.forEach((link, idx) => {
-      ctx.translate(node.position.x, node.position.y);
+      ctx.translate(node.position.x + xPan, node.position.y + yPan);
       rotation = idx * 2 * Math.PI / node.links.length;
       ctx.rotate(rotation);
       ctx.beginPath();
@@ -67,16 +66,4 @@ export const renderEdges = () => {
 
 }
 
-export const handleMouseScroll = (e) => {
-  e.preventDefault();
-  const canvas1 = document.getElementById('canvas1');
-  const ctx1 = canvas1.getContext('2d');
-  const canvas2 = document.getElementById('canvas2');
-  const ctx2 = canvas2.getContext('2d');
-  if (e.deltaY < 0)
-    scale *= 1.05;
-  else 
-    scale /= 1.05;
-  ctx1.setTransform(scale, 0, 0, scale, 0, 0);
-  ctx2.setTransform(scale, 0, 0, scale, 0, 0);
-}
+
