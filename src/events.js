@@ -1,5 +1,5 @@
 import { nodes, RADIUS, EDGE_LENGTH, SCREEN_Y_OFFSET } from './store';
-import { createNode } from './actions';
+import { createNode, deleteEdgeFromNode } from './actions';
 
 export let scale = 1;
 export let xPan = 0;
@@ -53,7 +53,7 @@ export const handleMouseUp = e => {
 }
 
 export const handleMouseMove = e => {
-  if (!nodes[activeNodeKey])
+  if (!nodes[activeNodeKey] || nodes[activeNodeKey].links.length === 0)
     return;
 
   const x = (e.offsetX) / scale - xPan;
@@ -102,6 +102,7 @@ export const handleClickEdge = () => {
       }
     }
     createNode(activeEdge.page, activeEdge.nodeKey, angle);
+    deleteEdgeFromNode(node, activeEdge.page);
     activeNodeKey = activeEdge.page;
   }
 }
@@ -113,10 +114,14 @@ export const setActiveNodeKey = key => {
 export const handleResize = e => {
   e.preventDefault();
   const canvas1 = document.getElementById('canvas1');
+  const ctx1 = canvas1.getContext('2d');
+  const canvas2 = document.getElementById('canvas2');
+  const ctx2 = canvas2.getContext('2d');
+
   canvas1.width = window.innerWidth;
   canvas1.height = window.innerHeight;  
-  
-  const canvas2 = document.getElementById('canvas2');
   canvas2.width = window.innerWidth;
   canvas2.height = window.innerHeight;
+  ctx1.setTransform(scale, 0, 0, scale, 0, 0);
+  ctx2.setTransform(scale, 0, 0, scale, 0, 0);
 }

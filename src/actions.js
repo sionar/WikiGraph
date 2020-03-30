@@ -23,6 +23,17 @@ export const createNode = (name, prevNode, angle) => {
   })
 }
 
+export const deleteEdgeFromNode = (node, page) => {
+  let idx = null;
+  for (let i = 0; i < node.links.length; i++) {
+    if (node.links[i].page === page)
+      idx = i;
+  }
+  if (idx !== null) {
+    node.links = node.links.slice(0, idx).concat(node.links.slice(idx+1, node.links.length));
+  }
+}
+
 export const reset = () => {
   resetStore();
   setActiveNodeKey(null);

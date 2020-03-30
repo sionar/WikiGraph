@@ -8927,12 +8927,13 @@
 /*!************************!*\
   !*** ./src/actions.js ***!
   \************************/
-/*! exports provided: createNode, reset */
+/*! exports provided: createNode, deleteEdgeFromNode, reset */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createNode", function() { return createNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteEdgeFromNode", function() { return deleteEdgeFromNode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reset", function() { return reset; });
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
 /* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./events */ "./src/events.js");
@@ -8959,6 +8960,17 @@ const createNode = (name, prevNode, angle) => {
     }
     Object(_events__WEBPACK_IMPORTED_MODULE_1__["setActiveNodeKey"])(name);
   })
+}
+
+const deleteEdgeFromNode = (node, page) => {
+  let idx = null;
+  for (let i = 0; i < node.links.length; i++) {
+    if (node.links[i].page === page)
+      idx = i;
+  }
+  if (idx !== null) {
+    node.links = node.links.slice(0, idx).concat(node.links.slice(idx+1, node.links.length));
+  }
 }
 
 const reset = () => {
@@ -9153,7 +9165,7 @@ const handleMouseUp = e => {
 }
 
 const handleMouseMove = e => {
-  if (!_store__WEBPACK_IMPORTED_MODULE_0__["nodes"][activeNodeKey])
+  if (!_store__WEBPACK_IMPORTED_MODULE_0__["nodes"][activeNodeKey] || _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][activeNodeKey].links.length === 0)
     return;
 
   const x = (e.offsetX) / scale - xPan;
@@ -9202,6 +9214,7 @@ const handleClickEdge = () => {
       }
     }
     Object(_actions__WEBPACK_IMPORTED_MODULE_1__["createNode"])(activeEdge.page, activeEdge.nodeKey, angle);
+    Object(_actions__WEBPACK_IMPORTED_MODULE_1__["deleteEdgeFromNode"])(node, activeEdge.page);
     activeNodeKey = activeEdge.page;
   }
 }
@@ -9213,12 +9226,16 @@ const setActiveNodeKey = key => {
 const handleResize = e => {
   e.preventDefault();
   const canvas1 = document.getElementById('canvas1');
+  const ctx1 = canvas1.getContext('2d');
+  const canvas2 = document.getElementById('canvas2');
+  const ctx2 = canvas2.getContext('2d');
+
   canvas1.width = window.innerWidth;
   canvas1.height = window.innerHeight;  
-  
-  const canvas2 = document.getElementById('canvas2');
   canvas2.width = window.innerWidth;
   canvas2.height = window.innerHeight;
+  ctx1.setTransform(scale, 0, 0, scale, 0, 0);
+  ctx2.setTransform(scale, 0, 0, scale, 0, 0);
 }
 
 /***/ }),
