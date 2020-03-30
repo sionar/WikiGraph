@@ -8961,8 +8961,8 @@ const createNode = (name, prevNode, angle) => {
 }
 
 const reset = () => {
-  const keys = Object.keys(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"]);
-  keys.forEach(key => delete _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][key]);
+  Object(_store__WEBPACK_IMPORTED_MODULE_0__["resetStore"])();
+  Object(_events__WEBPACK_IMPORTED_MODULE_1__["setActiveNodeKey"])(null);
 }
 
 
@@ -9014,12 +9014,12 @@ const drawNode = nodeKey => {
 }
 
 const renderEdges = () => {
-  if (_events__WEBPACK_IMPORTED_MODULE_1__["activeNodeKey"] === null) {
-    return;
-  }
   const canvas = document.getElementById('canvas2');
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width / _events__WEBPACK_IMPORTED_MODULE_1__["scale"], canvas.height / _events__WEBPACK_IMPORTED_MODULE_1__["scale"]);
+  if (_events__WEBPACK_IMPORTED_MODULE_1__["activeNodeKey"] === null) {
+    return;
+  }
   let node, rotation;
   node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][_events__WEBPACK_IMPORTED_MODULE_1__["activeNodeKey"]];
   node.links.forEach((link, idx) => {
@@ -9050,13 +9050,12 @@ const renderEdges = () => {
 
     ctx.setTransform(_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0,_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0);
   })
+
   _store__WEBPACK_IMPORTED_MODULE_0__["edges"].forEach(edge => {
     ctx.beginPath();
     ctx.moveTo(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"][edge.node1].position.x + _events__WEBPACK_IMPORTED_MODULE_1__["xPan"], _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][edge.node1].position.y + _events__WEBPACK_IMPORTED_MODULE_1__["yPan"]);
     ctx.lineWidth = 5;
-    if (_events__WEBPACK_IMPORTED_MODULE_1__["activeEdge"] && link.page === _events__WEBPACK_IMPORTED_MODULE_1__["activeEdge"].page) {
-      ctx.strokeStyle = "#000000";
-    }
+    ctx.strokeStyle = "#000000";
     ctx.lineTo(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"][edge.node2].position.x + _events__WEBPACK_IMPORTED_MODULE_1__["xPan"], _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][edge.node2].position.y + _events__WEBPACK_IMPORTED_MODULE_1__["yPan"]);
     ctx.stroke();
   })
@@ -9115,8 +9114,24 @@ const handleMouseScroll = e => {
 }
 
 const handleMouseDrag = e => {
-  xPan += e.movementX;
-  yPan += e.movementY;
+  const x = (e.offsetX) / scale - xPan;
+  const y = (e.offsetY + _store__WEBPACK_IMPORTED_MODULE_0__["SCREEN_Y_OFFSET"]) / scale - yPan;  
+  const nodeKeys = Object.keys(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"]);
+  let node, distSq, foundNode = false;
+
+  nodeKeys.forEach(nodeKey => {
+    node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][nodeKey];
+    distSq = Math.pow((x - node.position.x),2) + Math.pow((y - node.position.y),2)
+    if (distSq < _store__WEBPACK_IMPORTED_MODULE_0__["RADIUS"]*_store__WEBPACK_IMPORTED_MODULE_0__["RADIUS"] ) {
+      foundNode = true;
+      node.position.x += e.movementX;
+      node.position.y += e.movementY;
+    }
+  })
+  if (!foundNode) {
+    xPan += e.movementX;
+    yPan += e.movementY;
+  }
 }
 
 const handleMouseDown = e => {
@@ -9134,7 +9149,7 @@ const handleMouseMove = e => {
     return;
 
   const x = (e.offsetX) / scale - xPan;
-  const y = (e.offsetY + _store__WEBPACK_IMPORTED_MODULE_0__["SCREEN_OFFSET"]) / scale - yPan;
+  const y = (e.offsetY + _store__WEBPACK_IMPORTED_MODULE_0__["SCREEN_Y_OFFSET"]) / scale - yPan;
   const nodeKeys = Object.keys(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"]);
   let node, distSq, angle, idx;
   node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][activeNodeKey];
@@ -9157,16 +9172,16 @@ const handleMouseMove = e => {
 const handleClickNode = e => {
   const nodeKeys = Object.keys(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"]);
   const x = (e.offsetX) / scale - xPan;
-  const y = (e.offsetY + _store__WEBPACK_IMPORTED_MODULE_0__["SCREEN_OFFSET"]) / scale - yPan;
+  const y = (e.offsetY + _store__WEBPACK_IMPORTED_MODULE_0__["SCREEN_Y_OFFSET"]) / scale - yPan;
   let node, distSq;
   nodeKeys.forEach(nodeKey => {
     node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][nodeKey];
     distSq = Math.pow((x - node.position.x),2) + Math.pow((y - node.position.y),2)
     if (distSq < _store__WEBPACK_IMPORTED_MODULE_0__["RADIUS"]*_store__WEBPACK_IMPORTED_MODULE_0__["RADIUS"]) {
       activeNodeKey = nodeKey;
-      return;
     }
   })
+  if (!activeNodeKey) activeNodeKey = null; 
 }
 
 const handleClickEdge = () => {
@@ -9184,7 +9199,6 @@ const handleClickEdge = () => {
 
 const setActiveNodeKey = key => {
   activeNodeKey = key;
-  console.log(activeNodeKey);
 }
 
 /***/ }),
@@ -9258,7 +9272,7 @@ const handleClickReset = (e) => {
 /*!**********************!*\
   !*** ./src/store.js ***!
   \**********************/
-/*! exports provided: nodes, edges, RADIUS, EDGE_LENGTH, SCREEN_OFFSET, NODE_DISTANCE */
+/*! exports provided: nodes, edges, RADIUS, EDGE_LENGTH, SCREEN_Y_OFFSET, NODE_DISTANCE, resetStore */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9267,14 +9281,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edges", function() { return edges; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RADIUS", function() { return RADIUS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EDGE_LENGTH", function() { return EDGE_LENGTH; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SCREEN_OFFSET", function() { return SCREEN_OFFSET; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SCREEN_Y_OFFSET", function() { return SCREEN_Y_OFFSET; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NODE_DISTANCE", function() { return NODE_DISTANCE; });
-const nodes = {};
-const edges = [];
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resetStore", function() { return resetStore; });
+let nodes = {};
+let edges = [];
 const RADIUS = 50;
 const EDGE_LENGTH = 200;
-const SCREEN_OFFSET = 100;
+const SCREEN_Y_OFFSET = 100;
 const NODE_DISTANCE = 300;
+
+const resetStore = () => {
+  nodes = {};
+  edges = [];
+}
+
 
 /***/ })
 

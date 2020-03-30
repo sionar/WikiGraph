@@ -1,4 +1,4 @@
-import { nodes, RADIUS, EDGE_LENGTH, SCREEN_OFFSET } from './store';
+import { nodes, RADIUS, EDGE_LENGTH, SCREEN_Y_OFFSET } from './store';
 import { createNode } from './actions';
 
 export let scale = 1;
@@ -22,8 +22,24 @@ export const handleMouseScroll = e => {
 }
 
 export const handleMouseDrag = e => {
-  xPan += e.movementX;
-  yPan += e.movementY;
+  const x = (e.offsetX) / scale - xPan;
+  const y = (e.offsetY + SCREEN_Y_OFFSET) / scale - yPan;  
+  const nodeKeys = Object.keys(nodes);
+  let node, distSq, foundNode = false;
+
+  nodeKeys.forEach(nodeKey => {
+    node = nodes[nodeKey];
+    distSq = Math.pow((x - node.position.x),2) + Math.pow((y - node.position.y),2)
+    if (distSq < RADIUS*RADIUS ) {
+      foundNode = true;
+      node.position.x += e.movementX;
+      node.position.y += e.movementY;
+    }
+  })
+  if (!foundNode) {
+    xPan += e.movementX;
+    yPan += e.movementY;
+  }
 }
 
 export const handleMouseDown = e => {
@@ -41,7 +57,7 @@ export const handleMouseMove = e => {
     return;
 
   const x = (e.offsetX) / scale - xPan;
-  const y = (e.offsetY + SCREEN_OFFSET) / scale - yPan;
+  const y = (e.offsetY + SCREEN_Y_OFFSET) / scale - yPan;
   const nodeKeys = Object.keys(nodes);
   let node, distSq, angle, idx;
   node = nodes[activeNodeKey];
@@ -64,16 +80,16 @@ export const handleMouseMove = e => {
 export const handleClickNode = e => {
   const nodeKeys = Object.keys(nodes);
   const x = (e.offsetX) / scale - xPan;
-  const y = (e.offsetY + SCREEN_OFFSET) / scale - yPan;
+  const y = (e.offsetY + SCREEN_Y_OFFSET) / scale - yPan;
   let node, distSq;
   nodeKeys.forEach(nodeKey => {
     node = nodes[nodeKey];
     distSq = Math.pow((x - node.position.x),2) + Math.pow((y - node.position.y),2)
     if (distSq < RADIUS*RADIUS) {
       activeNodeKey = nodeKey;
-      return;
     }
   })
+  if (!activeNodeKey) activeNodeKey = null; 
 }
 
 export const handleClickEdge = () => {
@@ -91,5 +107,4 @@ export const handleClickEdge = () => {
 
 export const setActiveNodeKey = key => {
   activeNodeKey = key;
-  console.log(activeNodeKey);
 }

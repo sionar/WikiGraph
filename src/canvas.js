@@ -30,12 +30,12 @@ const drawNode = nodeKey => {
 }
 
 export const renderEdges = () => {
-  if (activeNodeKey === null) {
-    return;
-  }
   const canvas = document.getElementById('canvas2');
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width / scale, canvas.height / scale);
+  if (activeNodeKey === null) {
+    return;
+  }
   let node, rotation;
   node = nodes[activeNodeKey];
   node.links.forEach((link, idx) => {
@@ -66,13 +66,12 @@ export const renderEdges = () => {
 
     ctx.setTransform(scale,0,0,scale,0,0);
   })
+
   edges.forEach(edge => {
     ctx.beginPath();
     ctx.moveTo(nodes[edge.node1].position.x + xPan, nodes[edge.node1].position.y + yPan);
     ctx.lineWidth = 5;
-    if (activeEdge && link.page === activeEdge.page) {
-      ctx.strokeStyle = "#000000";
-    }
+    ctx.strokeStyle = "#000000";
     ctx.lineTo(nodes[edge.node2].position.x + xPan, nodes[edge.node2].position.y + yPan);
     ctx.stroke();
   })

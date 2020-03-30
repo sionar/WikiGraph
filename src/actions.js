@@ -1,4 +1,4 @@
-import { nodes, edges, NODE_DISTANCE } from './store';
+import { nodes, edges, NODE_DISTANCE, resetStore } from './store';
 import { setActiveNodeKey } from './events';
 
 const wiki = require('wtf_wikipedia');
@@ -23,7 +23,7 @@ export const createNode = (name, prevNode, angle) => {
 }
 
 export const reset = () => {
-  const keys = Object.keys(nodes);
-  keys.forEach(key => delete nodes[key]);
+  resetStore();
+  setActiveNodeKey(null);
 }
 
