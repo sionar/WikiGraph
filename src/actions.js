@@ -1,4 +1,5 @@
 import { nodes, edges, NODE_DISTANCE } from './store';
+import { setActiveNodeKey } from './events';
 
 const wiki = require('wtf_wikipedia');
 
@@ -17,6 +18,7 @@ export const createNode = (name, prevNode, angle) => {
       nodes[name].position = {x: xPos, y: yPos};
       edges.push({node1: prevNode, node2: name});
     }
+    setActiveNodeKey(name);
   })
 }
 

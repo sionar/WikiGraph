@@ -7,7 +7,7 @@ export let yPan = 0;
 export let activeNodeKey = null;
 export let activeEdge = null;
 
-export const handleMouseScroll = (e) => {
+export const handleMouseScroll = e => {
   e.preventDefault();
   const canvas1 = document.getElementById('canvas1');
   const ctx1 = canvas1.getContext('2d');
@@ -21,12 +21,12 @@ export const handleMouseScroll = (e) => {
   ctx2.setTransform(scale, 0, 0, scale, 0, 0);
 }
 
-export const handleMouseDrag = (e) => {
+export const handleMouseDrag = e => {
   xPan += e.movementX;
   yPan += e.movementY;
 }
 
-export const handleMouseDown = (e) => {
+export const handleMouseDown = e => {
   e.preventDefault();
   document.addEventListener('mousemove', handleMouseDrag);
 }
@@ -37,29 +37,43 @@ export const handleMouseUp = e => {
 }
 
 export const handleMouseMove = e => {
+  if (!activeNodeKey)
+    return;
+
   const x = (e.offsetX) / scale - xPan;
   const y = (e.offsetY + SCREEN_OFFSET) / scale - yPan;
   const nodeKeys = Object.keys(nodes);
   let node, distSq, angle, idx;
+  node = nodes[activeNodeKey];
+  distSq = Math.pow((x - node.position.x),2) + Math.pow((y - node.position.y),2)
+  if (RADIUS*RADIUS < distSq && distSq < EDGE_LENGTH * EDGE_LENGTH) {
+    angle = Math.atan((y - node.position.y)/(x - node.position.x));
+    if (x - node.position.x < 0 && y - node.position.y > 0)
+      angle = Math.PI + angle;
+    else if ( x - node.position.x < 0 && y - node.position.y < 0)
+      angle = Math.PI + angle;
+    else if ( x- node.position.x > 0 && y - node.position.y < 0)
+      angle = 2 * Math.PI + angle;
+    idx = Math.floor(angle/ (2 * Math.PI / node.links.length));
+    activeEdge = node.links[idx];
+  } else {
+    activeEdge = null;
+  };
+}
+
+export const handleClickNode = e => {
+  const nodeKeys = Object.keys(nodes);
+  const x = (e.offsetX) / scale - xPan;
+  const y = (e.offsetY + SCREEN_OFFSET) / scale - yPan;
+  let node, distSq;
   nodeKeys.forEach(nodeKey => {
     node = nodes[nodeKey];
     distSq = Math.pow((x - node.position.x),2) + Math.pow((y - node.position.y),2)
-    if (RADIUS*RADIUS < distSq && distSq < EDGE_LENGTH * EDGE_LENGTH) {
-      angle = Math.atan((y - node.position.y)/(x - node.position.x));
-      if (x - node.position.x < 0 && y - node.position.y > 0)
-        angle = Math.PI + angle;
-      else if ( x - node.position.x < 0 && y - node.position.y < 0)
-        angle = Math.PI + angle;
-      else if ( x- node.position.x > 0 && y - node.position.y < 0)
-        angle = 2 * Math.PI + angle;
-      idx = Math.floor(angle/ (2 * Math.PI / node.links.length));
+    if (distSq < RADIUS*RADIUS) {
       activeNodeKey = nodeKey;
-      activeEdge = node.links[idx];
-    } else {
-      activeNodeKey = null;
-      activeEdge = null;
+      return;
     }
-  });
+  })
 }
 
 export const handleClickEdge = () => {
@@ -73,4 +87,9 @@ export const handleClickEdge = () => {
     }
     createNode(activeEdge.page, activeNodeKey, angle);
   }
+}
+
+export const setActiveNodeKey = key => {
+  activeNodeKey = key;
+  console.log(activeNodeKey);
 }

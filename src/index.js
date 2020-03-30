@@ -1,8 +1,10 @@
 import { nodes } from './store';
 import { createNode, reset } from './actions';
 import { renderNodes, renderEdges} from './canvas';
-import { handleMouseScroll, handleMouseDown, handleMouseUp, handleMouseMove, handleClickEdge } from './events';
+import { handleMouseScroll, handleMouseDown, handleMouseUp, handleMouseMove, 
+         handleClickNode, handleClickEdge } from './events';
 
+         
 document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
   const resetButton = document.getElementById('reset-button');
@@ -24,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   canvasContainer.addEventListener('mousedown', handleMouseDown);
   canvasContainer.addEventListener('mouseup', handleMouseUp);
   canvasContainer.addEventListener('mousemove', handleMouseMove);
+  canvasContainer.addEventListener('mousedown', handleClickNode);
   canvasContainer.addEventListener('mousedown', handleClickEdge);
 
   setInterval(renderNodes, 17);

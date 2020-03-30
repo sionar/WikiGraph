@@ -1,5 +1,5 @@
 import { nodes, RADIUS, EDGE_LENGTH } from './store';
-import { scale, xPan, yPan, activeEdge } from './events';
+import { scale, xPan, yPan, activeEdge, activeNodeKey } from './events';
 
 
 export const renderNodes = () => {
@@ -30,43 +30,42 @@ const drawNode = nodeKey => {
 }
 
 export const renderEdges = () => {
+  if (activeNodeKey === null) {
+    return;
+  }
   const canvas = document.getElementById('canvas2');
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width / scale, canvas.height / scale);
-  const nodeKeys = Object.keys(nodes);
   let node, rotation;
-  nodeKeys.forEach(nodeKey => {
-    node = nodes[nodeKey];
-    node.links.forEach((link, idx) => {
-      ctx.translate(node.position.x + xPan, node.position.y + yPan);
-      rotation = idx * 2 * Math.PI / node.links.length;
-      ctx.rotate(rotation);
-      ctx.beginPath();
-      ctx.moveTo(0,0);
-      ctx.lineWidth = 5;
-      ctx.textAlign = "center";
-      if (activeEdge && link.page === activeEdge.page) {
-        ctx.strokeStyle = "#000000";
-        ctx.fillStyle = "#000000";
-      }
-      else {
-        ctx.strokeStyle = "#CCCCCC";
-        ctx.fillStyle = '#AAAAAA';
-      }
-      ctx.lineTo(EDGE_LENGTH, 0);
-      ctx.stroke();
-      ctx.font = "18px Calibri";
-      if (rotation >= Math.PI/2 && rotation < Math.PI * 3/2) {
-        ctx.rotate(Math.PI);
-        ctx.fillText(link.page, -150, -15);
-      } else {
-        ctx.fillText(link.page, 150, 30);
-      }
+  node = nodes[activeNodeKey];
+  node.links.forEach((link, idx) => {
+    ctx.translate(node.position.x + xPan, node.position.y + yPan);
+    rotation = idx * 2 * Math.PI / node.links.length;
+    ctx.rotate(rotation);
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineWidth = 5;
+    ctx.textAlign = "center";
+    if (activeEdge && link.page === activeEdge.page) {
+      ctx.strokeStyle = "#000000";
+      ctx.fillStyle = "#000000";
+    }
+    else {
+      ctx.strokeStyle = "#CCCCCC";
+      ctx.fillStyle = '#AAAAAA';
+    }
+    ctx.lineTo(EDGE_LENGTH, 0);
+    ctx.stroke();
+    ctx.font = "18px Calibri";
+    if (rotation >= Math.PI/2 && rotation < Math.PI * 3/2) {
+      ctx.rotate(Math.PI);
+      ctx.fillText(link.page, -150, -15);
+    } else {
+      ctx.fillText(link.page, 150, 30);
+    }
 
-      ctx.setTransform(scale,0,0,scale,0,0);
-    })
+    ctx.setTransform(scale,0,0,scale,0,0);
   })
-
 }
 
 
