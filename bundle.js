@@ -8995,7 +8995,7 @@ const drawNode = nodeKey => {
   ctx.fillStyle = '#B8D9FF';
   ctx.arc(node.position.x, node.position.y, RADIUS, 0, 2*Math.PI);
   ctx.fill();
-  ctx.font = "bold 48px Calibri";
+  ctx.font = "bold 24px Calibri";
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
   ctx.strokeStyle = 'white';
@@ -9007,7 +9007,7 @@ const drawNode = nodeKey => {
 const renderEdges = () => {
   const canvas = document.getElementById('canvas2');
   const ctx = canvas.getContext('2d');
-  
+
 
 }
 
