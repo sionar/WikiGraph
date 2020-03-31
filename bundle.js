@@ -9052,14 +9052,39 @@ const drawNode = nodeKey => {
   ctx.fillStyle = node.color;
   ctx.arc(0, 0, _store__WEBPACK_IMPORTED_MODULE_0__["RADIUS"], 0, 2*Math.PI);
   ctx.fill();
+  ctx.strokeStyle = '#FFFFFF';
+  ctx.stroke();
+  formatAndDrawText(nodeKey)
+  ctx.setTransform(_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0,_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0);
+}
+
+const formatAndDrawText = (text) => {
+  const LINE_HEIGHT = 16;
+  const LINE_WIDTH = 10;
+  const canvas = document.getElementById('canvas1');
+  const ctx = canvas.getContext('2d');
   ctx.font = "bold 16px Calibri";
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
-  ctx.fillStyle = '#AAAAAA';
+  ctx.fillStyle = '#FFFFFF';
   ctx.strokeStyle = '#FFFFFF';
-  ctx.fillText(nodeKey, 0, 0);
-  ctx.stroke();
-  ctx.setTransform(_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0,_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0);
+  const textArr = text.split(" ");
+  const lineArr = [];
+  let currLineText = ""
+  for (let i = 0; i < textArr.length; i++) {
+    if (currLineText && currLineText.length + textArr[i].length > LINE_WIDTH) {
+      lineArr.push(currLineText.slice(0, currLineText.length - 1));
+      currLineText = textArr[i] + " ";
+    } else {
+      currLineText += textArr[i] + " ";
+    }
+  }
+  lineArr.push(currLineText.slice(0, currLineText.length - 1));
+  console.log(lineArr);
+  const startY = (lineArr.length-1) * -1 * LINE_HEIGHT/2;
+  for (let i = 0; i < lineArr.length; i++) {    
+    ctx.fillText(lineArr[i], 0, startY + i * LINE_HEIGHT);
+  }
 }
 
 const renderEdges = () => {
