@@ -9428,7 +9428,10 @@ const showErrors = () => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadMobileEventListeners", function() { return loadMobileEventListeners; });
 /* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./events */ "./src/events.js");
- 
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./store */ "./src/store.js");
+
+
+
 
 let touchX1, touchY1, touchX2, touchY2, distance;
 
@@ -9445,18 +9448,35 @@ const handleTouchStart = e => {
   touchY1 = e.touches[0].clientY;
 
   if (e.touches.length >= 2) {
-    distance = dist(e.touches[0].clientX, e.touches[1].clientX, e.touches[0].clientY, e.touches[1].clientY);
+    distance = getDist(e.touches[0].clientX, e.touches[1].clientX, e.touches[0].clientY, e.touches[1].clientY);
   }
 
 }
 
-const handleTouchMove = e => {
+const handleTouchMove = e => {  
   e.preventDefault();
+  const x = (e.changedTouches[0].clientX) / _events__WEBPACK_IMPORTED_MODULE_0__["scale"] - _events__WEBPACK_IMPORTED_MODULE_0__["xPan"];
+  const y = (e.changedTouches[0].clientY) / _events__WEBPACK_IMPORTED_MODULE_0__["scale"] - _events__WEBPACK_IMPORTED_MODULE_0__["yPan"];
   const deltaX = e.changedTouches[0].clientX - touchX1;
   const deltaY = e.changedTouches[0].clientY - touchY1;
+  const nodeKeys = Object.keys(_store__WEBPACK_IMPORTED_MODULE_1__["nodes"]);
+  let node, distSq, foundNode = false;
+
+  nodeKeys.forEach(nodeKey => {
+    node = _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][nodeKey];
+    distSq = Math.pow((x - node.position.x),2) + Math.pow((y - node.position.y),2)
+    if (distSq < _store__WEBPACK_IMPORTED_MODULE_1__["RADIUS"]*_store__WEBPACK_IMPORTED_MODULE_1__["RADIUS"] ) {
+      foundNode = true;
+      node.position.x = node.position.x + deltaX / _events__WEBPACK_IMPORTED_MODULE_0__["scale"];
+      node.position.y = node.position.y + deltaY / _events__WEBPACK_IMPORTED_MODULE_0__["scale"];
+    }
+  })
+  if (!foundNode) {
+    Object(_events__WEBPACK_IMPORTED_MODULE_0__["modifyPan"])(deltaX, deltaY);
+  }
+
   touchX1 = e.changedTouches[0].clientX;
   touchY1 = e.changedTouches[0].clientY;
-  Object(_events__WEBPACK_IMPORTED_MODULE_0__["modifyPan"])(deltaX, deltaY);
 
   if (e.touches.length >= 2) {
     const newDist = dist(e.touches[0].clientX, e.touches[1].clientX, e.touches[0].clientY, e.touches[1].clientY);
@@ -9468,7 +9488,7 @@ const handleTouchMove = e => {
   }
 }
 
-const dist = (x1, y1, x2, y2) => {
+const getDist = (x1, y1, x2, y2) => {
   return Math.sqrt((Math.pow(x1-x2, 2) + Math.pow(y1-y2, 2)));
 }
 
