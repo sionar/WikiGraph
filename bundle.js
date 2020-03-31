@@ -8951,9 +8951,16 @@ const createNode = (name, prevNode, angle) => {
     if (text.length === 0 || paragraphs[1])
       text = paragraphs[1].text(); 
     const links = doc.links().map(link => link.json());
+    const nodeLinks = [];
+    for (let i = 0; i < links.length; i++) {
+      if (nodeLinks.length >= 8)
+        break;
+      if (links[i].type === 'internal')
+        nodeLinks.push(links[i]);
+    }
     _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name] = {};
     _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].color = randomColor();
-    _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].links = links.slice(0,8);
+    _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].links = nodeLinks;
     _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].text = text;
     const canvas = document.getElementById('canvas1');
     if (!prevNode) {
