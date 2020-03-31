@@ -9080,7 +9080,6 @@ const formatAndDrawText = (text) => {
     }
   }
   lineArr.push(currLineText.slice(0, currLineText.length - 1));
-  console.log(lineArr);
   const startY = (lineArr.length-1) * -1 * LINE_HEIGHT/2;
   for (let i = 0; i < lineArr.length; i++) {    
     ctx.fillText(lineArr[i], 0, startY + i * LINE_HEIGHT);
