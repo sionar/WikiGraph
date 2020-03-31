@@ -23,8 +23,10 @@
         </div>
         <div id="button-bar">
             <form id="start-form">
-                <label id="start-label">Enter a starting node:</label>
-                <input id="start-input"></input>
+                <div id="input-container">    
+                    <input type="text" id="start-input" placeholder="Enter a starting node"/>
+                    <span id="start-input-error">Wikipedia document not found</span>
+                </div>
                 <button class="button" id="start-button" form="start-form">Start</button>
             </form>
             <button class="button" id="info-button">Hide Info</button>

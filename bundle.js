@@ -8936,8 +8936,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteEdgeFromNode", function() { return deleteEdgeFromNode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reset", function() { return reset; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderInfo", function() { return renderInfo; });
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
-/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./events */ "./src/events.js");
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./src/index.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./store */ "./src/store.js");
+/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./events */ "./src/events.js");
+
 
 
 
@@ -8946,6 +8948,10 @@ const wiki = __webpack_require__(/*! wtf_wikipedia */ "./node_modules/wtf_wikipe
 const createNode = (name, prevNode, angle) => {
   wiki.fetch(name)
   .then (doc => {
+    if (doc === null) {
+      Object(_index__WEBPACK_IMPORTED_MODULE_0__["showErrors"])();
+      return;
+    }
     const paragraphs = doc.paragraphs();
     let text = paragraphs[0].text();
     if (text.length === 0 || paragraphs[1])
@@ -8958,21 +8964,22 @@ const createNode = (name, prevNode, angle) => {
       if (links[i].type === 'internal')
         nodeLinks.push(links[i]);
     }
-    _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name] = {};
-    _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].color = randomColor();
-    _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].links = nodeLinks;
-    _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].text = text;
+    _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][name] = {};
+    _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][name].color = randomColor();
+    _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][name].links = nodeLinks;
+    _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][name].text = text;
     const canvas = document.getElementById('canvas1');
     if (!prevNode) {
-      _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].position = {x: canvas.width/2, y: canvas.height/2};
+      _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][name].position = {x: canvas.width/2, y: canvas.height/2};
     } else {
-      const xPos = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][prevNode].position.x + _store__WEBPACK_IMPORTED_MODULE_0__["NODE_DISTANCE"] * Math.cos(angle); 
-      const yPos = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][prevNode].position.y + _store__WEBPACK_IMPORTED_MODULE_0__["NODE_DISTANCE"] * Math.sin(angle); 
-      _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].position = {x: xPos, y: yPos};
-      _store__WEBPACK_IMPORTED_MODULE_0__["edges"].push({node1: prevNode, node2: name});
+      const xPos = _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][prevNode].position.x + _store__WEBPACK_IMPORTED_MODULE_1__["NODE_DISTANCE"] * Math.cos(angle); 
+      const yPos = _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][prevNode].position.y + _store__WEBPACK_IMPORTED_MODULE_1__["NODE_DISTANCE"] * Math.sin(angle); 
+      _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][name].position = {x: xPos, y: yPos};
+      _store__WEBPACK_IMPORTED_MODULE_1__["edges"].push({node1: prevNode, node2: name});
     }
-    Object(_events__WEBPACK_IMPORTED_MODULE_1__["setActiveNodeKey"])(name);
-    renderInfo(name, _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].text);
+    Object(_events__WEBPACK_IMPORTED_MODULE_2__["setActiveNodeKey"])(name);
+    renderInfo(name, _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][name].text);
+
   })
 }
 
@@ -8988,8 +8995,8 @@ const deleteEdgeFromNode = (node, page) => {
 }
 
 const reset = () => {
-  Object(_store__WEBPACK_IMPORTED_MODULE_0__["resetStore"])();
-  Object(_events__WEBPACK_IMPORTED_MODULE_1__["setActiveNodeKey"])(null);
+  Object(_store__WEBPACK_IMPORTED_MODULE_1__["resetStore"])();
+  Object(_events__WEBPACK_IMPORTED_MODULE_2__["setActiveNodeKey"])(null);
   renderInfo('', '');
 }
 
@@ -9267,11 +9274,14 @@ const handleResize = e => {
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! no exports provided */
+/*! exports provided: handleInputClearErrors, toggleInput, showErrors */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleInputClearErrors", function() { return handleInputClearErrors; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toggleInput", function() { return toggleInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "showErrors", function() { return showErrors; });
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
 /* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./actions */ "./src/actions.js");
 /* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./canvas */ "./src/canvas.js");
@@ -9284,33 +9294,30 @@ __webpack_require__.r(__webpack_exports__);
          
 document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
-  startButton.addEventListener('click', handleStartClick)
-  
   const infoButton = document.getElementById('info-button');
-  infoButton.addEventListener('click', handleInfoClick)
-
+  const startInput = document.getElementById('start-input');
   const canvas1 = document.getElementById('canvas1');
+  const canvas2 = document.getElementById('canvas2');
+  const canvasBox = document.getElementById('canvas-box');
+  
   canvas1.width = window.innerWidth;
   canvas1.height = window.innerHeight;  
-  
-  const canvas2 = document.getElementById('canvas2');
   canvas2.width = window.innerWidth;
   canvas2.height = window.innerHeight;
-
-  const canvasContainer = canvas2.parentElement;
-  window.canvasContainer = canvasContainer;
-
-  canvasContainer.addEventListener('wheel', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseScroll"]);
-  canvasContainer.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseDown"]);
-  canvasContainer.addEventListener('mouseup', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseUp"]);
-  canvasContainer.addEventListener('mousemove', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseMove"]);
-  canvasContainer.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleClickNode"]);
-  canvasContainer.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleClickEdge"]);
+  
+  startButton.addEventListener('click', handleStartClick);
+  infoButton.addEventListener('click', handleInfoClick);
+  startInput.addEventListener('click', handleInputClearErrors);
+  canvasBox.addEventListener('wheel', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseScroll"]);
+  canvasBox.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseDown"]);
+  canvasBox.addEventListener('mouseup', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseUp"]);
+  canvasBox.addEventListener('mousemove', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseMove"]);
+  canvasBox.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleClickNode"]);
+  canvasBox.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleClickEdge"]);
   window.addEventListener('resize', _events__WEBPACK_IMPORTED_MODULE_3__["handleResize"]);
 
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderNodes"], 17);
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderEdges"], 17);
-
 })
 
 
@@ -9320,9 +9327,8 @@ const handleStartClick = e => {
   const input = document.getElementById('start-input');
   if (button.innerText === 'Start') {
     if (input.value) {
-      button.innerText = 'Reset';
       Object(_actions__WEBPACK_IMPORTED_MODULE_1__["createNode"])(input.value, null);
-      input.disabled = true;
+      toggleInput();
     }
   } 
   else {
@@ -9343,6 +9349,30 @@ const handleInfoClick = e => {
     button.innerText = 'Show Info'
     infoBox.style.display = 'none';
   }
+}
+
+const handleInputClearErrors = () => {
+  const input = document.getElementById('start-input');
+  input.style.border = "1px solid rgba(37, 169, 246, 0.849)";
+  const error = document.getElementById('start-input-error');
+  error.style.display = "none";
+}
+
+const toggleInput = () => {
+  const button = document.getElementById('start-button');
+  button.innerText = 'Reset';
+  const input = document.getElementById('start-input');
+  input.disabled = true;
+}
+
+const showErrors = () => {
+  const button = document.getElementById('start-button');
+  button.innerText = 'Start';
+  const input = document.getElementById('start-input');
+  input.disabled = false;
+  input.style.border = "1px solid #FF3333";
+  const error = document.getElementById('start-input-error');
+  error.style.display = "block";
 }
 
 /***/ }),

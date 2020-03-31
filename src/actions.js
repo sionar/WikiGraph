@@ -1,3 +1,4 @@
+import { toggleInput, showErrors } from './index';
 import { nodes, edges, NODE_DISTANCE, resetStore } from './store';
 import { setActiveNodeKey } from './events';
 
@@ -6,6 +7,10 @@ const wiki = require('wtf_wikipedia');
 export const createNode = (name, prevNode, angle) => {
   wiki.fetch(name)
   .then (doc => {
+    if (doc === null) {
+      showErrors();
+      return;
+    }
     const paragraphs = doc.paragraphs();
     let text = paragraphs[0].text();
     if (text.length === 0 || paragraphs[1])
@@ -33,6 +38,7 @@ export const createNode = (name, prevNode, angle) => {
     }
     setActiveNodeKey(name);
     renderInfo(name, nodes[name].text);
+
   })
 }
 

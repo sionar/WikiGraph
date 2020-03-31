@@ -7,33 +7,30 @@ import { handleMouseScroll, handleMouseDown, handleMouseUp, handleMouseMove,
          
 document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
-  startButton.addEventListener('click', handleStartClick)
-  
   const infoButton = document.getElementById('info-button');
-  infoButton.addEventListener('click', handleInfoClick)
-
+  const startInput = document.getElementById('start-input');
   const canvas1 = document.getElementById('canvas1');
+  const canvas2 = document.getElementById('canvas2');
+  const canvasBox = document.getElementById('canvas-box');
+  
   canvas1.width = window.innerWidth;
   canvas1.height = window.innerHeight;  
-  
-  const canvas2 = document.getElementById('canvas2');
   canvas2.width = window.innerWidth;
   canvas2.height = window.innerHeight;
-
-  const canvasContainer = canvas2.parentElement;
-  window.canvasContainer = canvasContainer;
-
-  canvasContainer.addEventListener('wheel', handleMouseScroll);
-  canvasContainer.addEventListener('mousedown', handleMouseDown);
-  canvasContainer.addEventListener('mouseup', handleMouseUp);
-  canvasContainer.addEventListener('mousemove', handleMouseMove);
-  canvasContainer.addEventListener('mousedown', handleClickNode);
-  canvasContainer.addEventListener('mousedown', handleClickEdge);
+  
+  startButton.addEventListener('click', handleStartClick);
+  infoButton.addEventListener('click', handleInfoClick);
+  startInput.addEventListener('click', handleInputClearErrors);
+  canvasBox.addEventListener('wheel', handleMouseScroll);
+  canvasBox.addEventListener('mousedown', handleMouseDown);
+  canvasBox.addEventListener('mouseup', handleMouseUp);
+  canvasBox.addEventListener('mousemove', handleMouseMove);
+  canvasBox.addEventListener('mousedown', handleClickNode);
+  canvasBox.addEventListener('mousedown', handleClickEdge);
   window.addEventListener('resize', handleResize);
 
   setInterval(renderNodes, 17);
   setInterval(renderEdges, 17);
-
 })
 
 
@@ -43,9 +40,8 @@ const handleStartClick = e => {
   const input = document.getElementById('start-input');
   if (button.innerText === 'Start') {
     if (input.value) {
-      button.innerText = 'Reset';
       createNode(input.value, null);
-      input.disabled = true;
+      toggleInput();
     }
   } 
   else {
@@ -66,4 +62,28 @@ const handleInfoClick = e => {
     button.innerText = 'Show Info'
     infoBox.style.display = 'none';
   }
+}
+
+export const handleInputClearErrors = () => {
+  const input = document.getElementById('start-input');
+  input.style.border = "1px solid rgba(37, 169, 246, 0.849)";
+  const error = document.getElementById('start-input-error');
+  error.style.display = "none";
+}
+
+export const toggleInput = () => {
+  const button = document.getElementById('start-button');
+  button.innerText = 'Reset';
+  const input = document.getElementById('start-input');
+  input.disabled = true;
+}
+
+export const showErrors = () => {
+  const button = document.getElementById('start-button');
+  button.innerText = 'Start';
+  const input = document.getElementById('start-input');
+  input.disabled = false;
+  input.style.border = "1px solid #FF3333";
+  const error = document.getElementById('start-input-error');
+  error.style.display = "block";
 }
