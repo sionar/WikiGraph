@@ -130,3 +130,12 @@ export const handleResize = e => {
   ctx1.setTransform(scale, 0, 0, scale, 0, 0);
   ctx2.setTransform(scale, 0, 0, scale, 0, 0);
 }
+
+export const modifyPan = (x,y) => {
+  xPan += x;
+  yPan += y;
+}
+
+export const modifyScale = (val) => {
+  scale *= val;
+}

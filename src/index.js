@@ -2,7 +2,7 @@ import { createNode, reset } from './actions';
 import { renderNodes, renderEdges} from './canvas';
 import { handleMouseScroll, handleMouseDown, handleMouseUp, handleMouseMove, 
          handleClickNode, handleClickEdge, handleResize } from './events';
-
+import { loadMobileEventListeners } from './mobile';
          
 document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
   canvasBox.addEventListener('mousedown', handleClickNode);
   canvasBox.addEventListener('mousedown', handleClickEdge);
   window.addEventListener('resize', handleResize);
+
+  loadMobileEventListeners();
 
   setInterval(renderNodes, 17);
   setInterval(renderEdges, 17);

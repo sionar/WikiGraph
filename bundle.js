@@ -9141,7 +9141,7 @@ const renderEdges = () => {
 /*!***********************!*\
   !*** ./src/events.js ***!
   \***********************/
-/*! exports provided: scale, xPan, yPan, activeNodeKey, activeEdge, handleMouseScroll, handleMouseDrag, handleMouseDown, handleMouseUp, handleMouseMove, handleClickNode, handleClickEdge, setActiveNodeKey, handleResize */
+/*! exports provided: scale, xPan, yPan, activeNodeKey, activeEdge, handleMouseScroll, handleMouseDrag, handleMouseDown, handleMouseUp, handleMouseMove, handleClickNode, handleClickEdge, setActiveNodeKey, handleResize, modifyPan, modifyScale */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9160,6 +9160,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleClickEdge", function() { return handleClickEdge; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setActiveNodeKey", function() { return setActiveNodeKey; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleResize", function() { return handleResize; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modifyPan", function() { return modifyPan; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modifyScale", function() { return modifyScale; });
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
 /* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./actions */ "./src/actions.js");
 
@@ -9295,6 +9297,15 @@ const handleResize = e => {
   ctx2.setTransform(scale, 0, 0, scale, 0, 0);
 }
 
+const modifyPan = (x,y) => {
+  xPan += x;
+  yPan += y;
+}
+
+const modifyScale = (val) => {
+  scale *= val;
+}
+
 /***/ }),
 
 /***/ "./src/index.js":
@@ -9312,6 +9323,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./src/actions.js");
 /* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./canvas */ "./src/canvas.js");
 /* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./events */ "./src/events.js");
+/* harmony import */ var _mobile__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./mobile */ "./src/mobile.js");
 
 
 
@@ -9340,6 +9352,8 @@ document.addEventListener('DOMContentLoaded', () => {
   canvasBox.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_2__["handleClickNode"]);
   canvasBox.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_2__["handleClickEdge"]);
   window.addEventListener('resize', _events__WEBPACK_IMPORTED_MODULE_2__["handleResize"]);
+
+  Object(_mobile__WEBPACK_IMPORTED_MODULE_4__["loadMobileEventListeners"])();
 
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_1__["renderNodes"], 17);
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_1__["renderEdges"], 17);
@@ -9398,6 +9412,62 @@ const showErrors = () => {
   input.style.border = "1px solid #FF3333";
   const error = document.getElementById('start-input-error');
   error.style.display = "block";
+}
+
+/***/ }),
+
+/***/ "./src/mobile.js":
+/*!***********************!*\
+  !*** ./src/mobile.js ***!
+  \***********************/
+/*! exports provided: loadMobileEventListeners */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadMobileEventListeners", function() { return loadMobileEventListeners; });
+/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./events */ "./src/events.js");
+ 
+
+let touchX1, touchY1, touchX2, touchY2, distance;
+
+const loadMobileEventListeners = () => {
+  const canvasBox = document.getElementById('canvas-box');
+
+  
+  canvasBox.addEventListener('touchstart', handleTouchStart);
+  canvasBox.addEventListener('touchmove', handleTouchMove);
+}
+
+const handleTouchStart = e => {
+  touchX1 = e.touches[0].clientX;
+  touchY1 = e.touches[0].clientY;
+
+  if (e.touches.length >= 2) {
+    distance = dist(e.touches[0].clientX, e.touches[1].clientX, e.touches[0].clientY, e.touches[1].clientY);
+  }
+
+}
+
+const handleTouchMove = e => {
+  const deltaX = e.changedTouches[0].clientX - touchX1;
+  const deltaY = e.changedTouches[0].clientY - touchY1;
+  touchX1 = e.changedTouches[0].clientX;
+  touchY1 = e.changedTouches[0].clientY;
+  Object(_events__WEBPACK_IMPORTED_MODULE_0__["modifyPan"])(deltaX, deltaY);
+
+  if (e.touches.length >= 2) {
+    const newDist = dist(e.touches[0].clientX, e.touches[1].clientX, e.touches[0].clientY, e.touches[1].clientY);
+    if (distance - newDist < 0)
+      Object(_events__WEBPACK_IMPORTED_MODULE_0__["modifyScale"])(1/1.05);
+    else
+      Object(_events__WEBPACK_IMPORTED_MODULE_0__["modifyScale"])(1.05);
+    distance = newDist;
+  }
+}
+
+const dist = (x1, y1, x2, y2) => {
+  return Math.sqrt((Math.pow(x1-x2, 2) + Math.pow(y1-y2, 2)));
 }
 
 /***/ }),
