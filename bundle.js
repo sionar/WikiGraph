@@ -9188,6 +9188,7 @@ const handleMouseScroll = e => {
 }
 
 const handleMouseDrag = e => {
+  e.preventDefault();
   const x = (e.offsetX) / scale - xPan;
   const y = (e.offsetY + _store__WEBPACK_IMPORTED_MODULE_0__["SCREEN_Y_OFFSET"]) / scale - yPan;  
   const nodeKeys = Object.keys(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"]);
@@ -9460,9 +9461,9 @@ const handleTouchMove = e => {
   if (e.touches.length >= 2) {
     const newDist = dist(e.touches[0].clientX, e.touches[1].clientX, e.touches[0].clientY, e.touches[1].clientY);
     if (distance - newDist < 0)
-      Object(_events__WEBPACK_IMPORTED_MODULE_0__["modifyScale"])(1/1.01);
+      Object(_events__WEBPACK_IMPORTED_MODULE_0__["modifyScale"])(1/1.03);
     else
-      Object(_events__WEBPACK_IMPORTED_MODULE_0__["modifyScale"])(1.01);
+      Object(_events__WEBPACK_IMPORTED_MODULE_0__["modifyScale"])(1.03);
     distance = newDist;
   }
 }
