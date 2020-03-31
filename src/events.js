@@ -1,5 +1,5 @@
 import { nodes, RADIUS, EDGE_LENGTH, SCREEN_Y_OFFSET } from './store';
-import { createNode, deleteEdgeFromNode } from './actions';
+import { createNode, deleteEdgeFromNode, renderInfo } from './actions';
 
 export let scale = 1;
 export let xPan = 0;
@@ -82,12 +82,14 @@ export const handleClickNode = e => {
   const x = (e.offsetX) / scale - xPan;
   const y = (e.offsetY + SCREEN_Y_OFFSET) / scale - yPan;
   let node, distSq;
+
   activeNodeKey = null;
   nodeKeys.forEach(nodeKey => {
     node = nodes[nodeKey];
     distSq = Math.pow((x - node.position.x),2) + Math.pow((y - node.position.y),2)
     if (distSq < RADIUS*RADIUS) {
       activeNodeKey = nodeKey;
+      renderInfo(nodeKey, node.text);
     }
   })
 }

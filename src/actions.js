@@ -6,10 +6,15 @@ const wiki = require('wtf_wikipedia');
 export const createNode = (name, prevNode, angle) => {
   wiki.fetch(name)
   .then (doc => {
-    const links = doc.links().map(link => link.json())
+    const paragraphs = doc.paragraphs();
+    let text = paragraphs[0].text();
+    if (text.length === 0 || paragraphs[1])
+      text = paragraphs[1].text(); 
+    const links = doc.links().map(link => link.json());
     nodes[name] = {};
     nodes[name].color = randomColor();
     nodes[name].links = links.slice(0,8);
+    nodes[name].text = text;
     const canvas = document.getElementById('canvas1');
     if (!prevNode) {
       nodes[name].position = {x: canvas.width/2, y: canvas.height/2};
@@ -20,6 +25,7 @@ export const createNode = (name, prevNode, angle) => {
       edges.push({node1: prevNode, node2: name});
     }
     setActiveNodeKey(name);
+    renderInfo(name, nodes[name].text);
   })
 }
 
@@ -46,4 +52,11 @@ const randomColor = () => {
     output += chars[Math.floor(Math.random() * chars.length)];
   }
   return output;
+}
+
+export const renderInfo = (key, text) => {
+  const infoTitle = document.getElementById('info-title');
+  const infoText = document.getElementById('info-text');
+  infoTitle.innerHTML = key;
+  infoText.innerHTML = text;
 }

@@ -8927,7 +8927,7 @@
 /*!************************!*\
   !*** ./src/actions.js ***!
   \************************/
-/*! exports provided: createNode, deleteEdgeFromNode, reset */
+/*! exports provided: createNode, deleteEdgeFromNode, reset, renderInfo */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8935,6 +8935,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createNode", function() { return createNode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteEdgeFromNode", function() { return deleteEdgeFromNode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reset", function() { return reset; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderInfo", function() { return renderInfo; });
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
 /* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./events */ "./src/events.js");
 
@@ -8945,10 +8946,15 @@ const wiki = __webpack_require__(/*! wtf_wikipedia */ "./node_modules/wtf_wikipe
 const createNode = (name, prevNode, angle) => {
   wiki.fetch(name)
   .then (doc => {
-    const links = doc.links().map(link => link.json())
+    const paragraphs = doc.paragraphs();
+    let text = paragraphs[0].text();
+    if (text.length === 0 || paragraphs[1])
+      text = paragraphs[1].text(); 
+    const links = doc.links().map(link => link.json());
     _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name] = {};
     _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].color = randomColor();
     _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].links = links.slice(0,8);
+    _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].text = text;
     const canvas = document.getElementById('canvas1');
     if (!prevNode) {
       _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].position = {x: canvas.width/2, y: canvas.height/2};
@@ -8959,6 +8965,7 @@ const createNode = (name, prevNode, angle) => {
       _store__WEBPACK_IMPORTED_MODULE_0__["edges"].push({node1: prevNode, node2: name});
     }
     Object(_events__WEBPACK_IMPORTED_MODULE_1__["setActiveNodeKey"])(name);
+    renderInfo(name, _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][name].text);
   })
 }
 
@@ -8987,6 +8994,12 @@ const randomColor = () => {
   return output;
 }
 
+const renderInfo = (key, text) => {
+  const infoTitle = document.getElementById('info-title');
+  const infoText = document.getElementById('info-text');
+  infoTitle.innerHTML = key;
+  infoText.innerHTML = text;
+}
 
 /***/ }),
 
@@ -9194,12 +9207,14 @@ const handleClickNode = e => {
   const x = (e.offsetX) / scale - xPan;
   const y = (e.offsetY + _store__WEBPACK_IMPORTED_MODULE_0__["SCREEN_Y_OFFSET"]) / scale - yPan;
   let node, distSq;
+
   activeNodeKey = null;
   nodeKeys.forEach(nodeKey => {
     node = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"][nodeKey];
     distSq = Math.pow((x - node.position.x),2) + Math.pow((y - node.position.y),2)
     if (distSq < _store__WEBPACK_IMPORTED_MODULE_0__["RADIUS"]*_store__WEBPACK_IMPORTED_MODULE_0__["RADIUS"]) {
       activeNodeKey = nodeKey;
+      Object(_actions__WEBPACK_IMPORTED_MODULE_1__["renderInfo"])(nodeKey, node.text);
     }
   })
 }
@@ -9261,8 +9276,11 @@ __webpack_require__.r(__webpack_exports__);
          
 document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
-  startButton.addEventListener('click', handleClick)
+  startButton.addEventListener('click', handleStartClick)
   
+  const infoButton = document.getElementById('info-button');
+  infoButton.addEventListener('click', handleInfoClick)
+
   const canvas1 = document.getElementById('canvas1');
   canvas1.width = window.innerWidth;
   canvas1.height = window.innerHeight;  
@@ -9272,6 +9290,7 @@ document.addEventListener('DOMContentLoaded', () => {
   canvas2.height = window.innerHeight;
 
   const canvasContainer = canvas2.parentElement;
+  window.canvasContainer = canvasContainer;
 
   canvasContainer.addEventListener('wheel', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseScroll"]);
   canvasContainer.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseDown"]);
@@ -9287,7 +9306,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 
-const handleClick = e => {
+const handleStartClick = e => {
   e.preventDefault();
   const button = e.target;
   if (button.innerText === 'Start') {
@@ -9299,6 +9318,19 @@ const handleClick = e => {
       button.innerText = 'Start';
       Object(_actions__WEBPACK_IMPORTED_MODULE_1__["reset"])();
     }
+}
+
+const handleInfoClick = e => {
+  e.preventDefault();
+  const button = e.target;
+  const infoBox = document.getElementById('info-box');
+  if (button.innerText === 'Show Info') {
+    button.innerText = 'Hide Info';
+    infoBox.style.display = 'flex';
+  } else {
+    button.innerText = 'Show Info'
+    infoBox.style.display = 'none';
+  }
 }
 
 /***/ }),

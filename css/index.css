@@ -65,7 +65,7 @@ h2 {
   margin-left: 5px;
   border: 0px;
   border-radius: 3px;
-  background-color: rgba(37, 169, 246, 0.849);
+  background-color: rgba(61, 177, 245, 0.849);
   color: azure;
 }
 
@@ -95,4 +95,27 @@ h2 {
   left: 0px;
   top: 0px;
   z-index: -2;
+}
+
+#info-box {
+  background-color: rgba(212, 212, 241, 0.6);
+  width: 40vh;
+  min-height: 80vh;
+  border-radius: 0px 0px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 100px;
+  overflow: hidden;
+}
+
+#info-title {
+  margin: 10px;
+  font-size: 20px;
+}
+
+#info-text {
+  margin: 50px 20px 20px 20px;
+  z-index: -3;
 }

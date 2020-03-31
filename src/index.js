@@ -7,8 +7,11 @@ import { handleMouseScroll, handleMouseDown, handleMouseUp, handleMouseMove,
          
 document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
-  startButton.addEventListener('click', handleClick)
+  startButton.addEventListener('click', handleStartClick)
   
+  const infoButton = document.getElementById('info-button');
+  infoButton.addEventListener('click', handleInfoClick)
+
   const canvas1 = document.getElementById('canvas1');
   canvas1.width = window.innerWidth;
   canvas1.height = window.innerHeight;  
@@ -18,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   canvas2.height = window.innerHeight;
 
   const canvasContainer = canvas2.parentElement;
+  window.canvasContainer = canvasContainer;
 
   canvasContainer.addEventListener('wheel', handleMouseScroll);
   canvasContainer.addEventListener('mousedown', handleMouseDown);
@@ -33,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 
-const handleClick = e => {
+const handleStartClick = e => {
   e.preventDefault();
   const button = e.target;
   if (button.innerText === 'Start') {
@@ -45,4 +49,17 @@ const handleClick = e => {
       button.innerText = 'Start';
       reset();
     }
+}
+
+const handleInfoClick = e => {
+  e.preventDefault();
+  const button = e.target;
+  const infoBox = document.getElementById('info-box');
+  if (button.innerText === 'Show Info') {
+    button.innerText = 'Hide Info';
+    infoBox.style.display = 'flex';
+  } else {
+    button.innerText = 'Show Info'
+    infoBox.style.display = 'none';
+  }
 }
