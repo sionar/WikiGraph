@@ -9317,9 +9317,9 @@ const handleStartClick = e => {
   e.preventDefault();
   const button = e.target;
   if (button.innerText === 'Start') {
-    button.innerText = 'Reset';
     const inputValue = document.getElementById('start-input').value;
     if (inputValue)
+      button.innerText = 'Reset';
       Object(_actions__WEBPACK_IMPORTED_MODULE_1__["createNode"])(inputValue, null);
   } else {
       button.innerText = 'Start';

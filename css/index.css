@@ -10,24 +10,50 @@ body {
 }
 
 #header-bar {
-  display: flex;
   width: 100%;
-  background-color: rgb(37, 170, 246);
   height: 50px;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   position: relative;
   left: 0px;
   top: 0px;
+  background-color: rgb(37, 170, 246);
+}
+
+#title-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 20px;
+}
+
+#icon-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 20px;
 }
 
 h1 {
   font-size: 30px;
-  margin-left: 20px;
 }
 
 
 h2 {
   margin-left: 20px;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  margin-left: 5px;
+}
+
+#linkedin-icon {
+  width: 40px;
+  height: 40px;
+  margin-left: 8px;
 }
 
 #button-bar {
@@ -67,6 +93,7 @@ h2 {
   border-radius: 3px;
   background-color: rgba(61, 177, 245, 0.849);
   color: azure;
+  outline: none;
 }
 
 .button:hover {
@@ -111,11 +138,11 @@ h2 {
 }
 
 #info-title {
-  margin: 10px;
+  margin: 30px 10px 10px 10px;
   font-size: 20px;
 }
 
 #info-text {
-  margin: 50px 20px 20px 20px;
+  margin: 30px 20px 20px 20px;
   z-index: -3;
 }
