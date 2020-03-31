@@ -9450,6 +9450,7 @@ const handleTouchStart = e => {
 }
 
 const handleTouchMove = e => {
+  e.preventDefault();
   const deltaX = e.changedTouches[0].clientX - touchX1;
   const deltaY = e.changedTouches[0].clientY - touchY1;
   touchX1 = e.changedTouches[0].clientX;
