@@ -7,4 +7,18 @@
     width: 150px;
   }
 
+  #info-box {
+    display: none;
+  }
+
+  #info-button {
+    display: none;
+  }
+
+}
+
+@media only screen and (max-height: 500px) {
+  #info-text {
+    font-size: 6px;
+  }
 }
