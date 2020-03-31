@@ -1,4 +1,3 @@
-import { nodes } from './store';
 import { createNode, reset } from './actions';
 import { renderNodes, renderEdges} from './canvas';
 import { handleMouseScroll, handleMouseDown, handleMouseUp, handleMouseMove, 

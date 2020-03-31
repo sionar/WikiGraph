@@ -19,11 +19,11 @@ const drawNode = nodeKey => {
   ctx.fillStyle = node.color;
   ctx.arc(0, 0, RADIUS, 0, 2*Math.PI);
   ctx.fill();
-  ctx.font = "bold 18px Calibri";
+  ctx.font = "bold 16px Calibri";
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
-  ctx.strokeStyle = '#CCCCCC';
-  ctx.fillStyle = '#CCCCCC';
+  ctx.fillStyle = '#AAAAAA';
+  ctx.strokeStyle = '#FFFFFF';
   ctx.fillText(nodeKey, 0, 0);
   ctx.stroke();
   ctx.setTransform(scale,0,0,scale,0,0);

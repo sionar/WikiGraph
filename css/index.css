@@ -84,7 +84,7 @@ h2 {
 
 #start-input {
   margin-left: 10px;
-  width: 300px;
+  width: 200px;
   height: 25px;
   border-radius: 3px;
   border: 1px solid rgba(37, 169, 246, 0.849);
@@ -154,7 +154,7 @@ h2 {
 
 #info-box {
   background-color: rgba(173, 173, 199, 0.6);
-  width: 40vh;
+  width: 20vw;
   min-height: 80vh;
   border-radius: 0px 0px 20px;
   display: flex;

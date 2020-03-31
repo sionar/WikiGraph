@@ -9052,11 +9052,11 @@ const drawNode = nodeKey => {
   ctx.fillStyle = node.color;
   ctx.arc(0, 0, _store__WEBPACK_IMPORTED_MODULE_0__["RADIUS"], 0, 2*Math.PI);
   ctx.fill();
-  ctx.font = "bold 18px Calibri";
+  ctx.font = "bold 16px Calibri";
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
-  ctx.strokeStyle = '#CCCCCC';
-  ctx.fillStyle = '#CCCCCC';
+  ctx.fillStyle = '#AAAAAA';
+  ctx.strokeStyle = '#FFFFFF';
   ctx.fillText(nodeKey, 0, 0);
   ctx.stroke();
   ctx.setTransform(_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0,_events__WEBPACK_IMPORTED_MODULE_1__["scale"],0,0);
@@ -9282,11 +9282,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleInputClearErrors", function() { return handleInputClearErrors; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toggleInput", function() { return toggleInput; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "showErrors", function() { return showErrors; });
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.js");
-/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./actions */ "./src/actions.js");
-/* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./canvas */ "./src/canvas.js");
-/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./events */ "./src/events.js");
-
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./src/actions.js");
+/* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./canvas */ "./src/canvas.js");
+/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./events */ "./src/events.js");
 
 
 
@@ -9308,16 +9306,16 @@ document.addEventListener('DOMContentLoaded', () => {
   startButton.addEventListener('click', handleStartClick);
   infoButton.addEventListener('click', handleInfoClick);
   startInput.addEventListener('click', handleInputClearErrors);
-  canvasBox.addEventListener('wheel', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseScroll"]);
-  canvasBox.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseDown"]);
-  canvasBox.addEventListener('mouseup', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseUp"]);
-  canvasBox.addEventListener('mousemove', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseMove"]);
-  canvasBox.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleClickNode"]);
-  canvasBox.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleClickEdge"]);
-  window.addEventListener('resize', _events__WEBPACK_IMPORTED_MODULE_3__["handleResize"]);
+  canvasBox.addEventListener('wheel', _events__WEBPACK_IMPORTED_MODULE_2__["handleMouseScroll"]);
+  canvasBox.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_2__["handleMouseDown"]);
+  canvasBox.addEventListener('mouseup', _events__WEBPACK_IMPORTED_MODULE_2__["handleMouseUp"]);
+  canvasBox.addEventListener('mousemove', _events__WEBPACK_IMPORTED_MODULE_2__["handleMouseMove"]);
+  canvasBox.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_2__["handleClickNode"]);
+  canvasBox.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_2__["handleClickEdge"]);
+  window.addEventListener('resize', _events__WEBPACK_IMPORTED_MODULE_2__["handleResize"]);
 
-  setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderNodes"], 17);
-  setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderEdges"], 17);
+  setInterval(_canvas__WEBPACK_IMPORTED_MODULE_1__["renderNodes"], 17);
+  setInterval(_canvas__WEBPACK_IMPORTED_MODULE_1__["renderEdges"], 17);
 })
 
 
@@ -9327,14 +9325,14 @@ const handleStartClick = e => {
   const input = document.getElementById('start-input');
   if (button.innerText === 'Start') {
     if (input.value) {
-      Object(_actions__WEBPACK_IMPORTED_MODULE_1__["createNode"])(input.value, null);
+      Object(_actions__WEBPACK_IMPORTED_MODULE_0__["createNode"])(input.value, null);
       toggleInput();
     }
   } 
   else {
       button.innerText = 'Start';
       input.disabled = false;
-      Object(_actions__WEBPACK_IMPORTED_MODULE_1__["reset"])();
+      Object(_actions__WEBPACK_IMPORTED_MODULE_0__["reset"])();
     }
 }
 
