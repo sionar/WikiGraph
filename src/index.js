@@ -29,24 +29,28 @@ document.addEventListener('DOMContentLoaded', () => {
   canvasContainer.addEventListener('mousemove', handleMouseMove);
   canvasContainer.addEventListener('mousedown', handleClickNode);
   canvasContainer.addEventListener('mousedown', handleClickEdge);
+  window.addEventListener('resize', handleResize);
 
   setInterval(renderNodes, 17);
   setInterval(renderEdges, 17);
-  window.addEventListener('resize', handleResize);
-  window.nodes = nodes;
+
 })
 
 
 const handleStartClick = e => {
   e.preventDefault();
   const button = e.target;
+  const input = document.getElementById('start-input');
   if (button.innerText === 'Start') {
-    const inputValue = document.getElementById('start-input').value;
-    if (inputValue)
+    if (input.value) {
       button.innerText = 'Reset';
-      createNode(inputValue, null);
-  } else {
+      createNode(input.value, null);
+      input.disabled = true;
+    }
+  } 
+  else {
       button.innerText = 'Start';
+      input.disabled = false;
       reset();
     }
 }

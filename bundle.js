@@ -8990,6 +8990,7 @@ const deleteEdgeFromNode = (node, page) => {
 const reset = () => {
   Object(_store__WEBPACK_IMPORTED_MODULE_0__["resetStore"])();
   Object(_events__WEBPACK_IMPORTED_MODULE_1__["setActiveNodeKey"])(null);
+  renderInfo('', '');
 }
 
 const randomColor = () => {
@@ -9305,24 +9306,28 @@ document.addEventListener('DOMContentLoaded', () => {
   canvasContainer.addEventListener('mousemove', _events__WEBPACK_IMPORTED_MODULE_3__["handleMouseMove"]);
   canvasContainer.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleClickNode"]);
   canvasContainer.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_3__["handleClickEdge"]);
+  window.addEventListener('resize', _events__WEBPACK_IMPORTED_MODULE_3__["handleResize"]);
 
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderNodes"], 17);
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_2__["renderEdges"], 17);
-  window.addEventListener('resize', _events__WEBPACK_IMPORTED_MODULE_3__["handleResize"]);
-  window.nodes = _store__WEBPACK_IMPORTED_MODULE_0__["nodes"];
+
 })
 
 
 const handleStartClick = e => {
   e.preventDefault();
   const button = e.target;
+  const input = document.getElementById('start-input');
   if (button.innerText === 'Start') {
-    const inputValue = document.getElementById('start-input').value;
-    if (inputValue)
+    if (input.value) {
       button.innerText = 'Reset';
-      Object(_actions__WEBPACK_IMPORTED_MODULE_1__["createNode"])(inputValue, null);
-  } else {
+      Object(_actions__WEBPACK_IMPORTED_MODULE_1__["createNode"])(input.value, null);
+      input.disabled = true;
+    }
+  } 
+  else {
       button.innerText = 'Start';
+      input.disabled = false;
       Object(_actions__WEBPACK_IMPORTED_MODULE_1__["reset"])();
     }
 }

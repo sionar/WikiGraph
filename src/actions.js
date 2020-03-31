@@ -50,6 +50,7 @@ export const deleteEdgeFromNode = (node, page) => {
 export const reset = () => {
   resetStore();
   setActiveNodeKey(null);
+  renderInfo('', '');
 }
 
 const randomColor = () => {
