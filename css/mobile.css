@@ -1,0 +1,10 @@
+@media only screen and (max-width: 600px) {
+  h2 {
+    display: none;
+  }
+
+  #start-input {
+    width: 150px;
+  }
+
+}

@@ -119,11 +119,14 @@ export const handleResize = e => {
   const ctx1 = canvas1.getContext('2d');
   const canvas2 = document.getElementById('canvas2');
   const ctx2 = canvas2.getContext('2d');
+ 
+  const width = screen.width ? screen.width : window.innerWidth;
+  const height = screen.height ? screen.height : window.innerHeight;
 
-  canvas1.width = window.innerWidth;
-  canvas1.height = window.innerHeight;  
-  canvas2.width = window.innerWidth;
-  canvas2.height = window.innerHeight;
+  canvas1.width = width;
+  canvas1.height = height;
+  canvas2.width = width;
+  canvas2.height = height;
   ctx1.setTransform(scale, 0, 0, scale, 0, 0);
   ctx2.setTransform(scale, 0, 0, scale, 0, 0);
 }
