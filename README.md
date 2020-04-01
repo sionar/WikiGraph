@@ -1,5 +1,4 @@
-# WikiGraph
-
+# WikiGraph 
 [Live Link](https://sionar.github.io/WikiGraph/)
 
 ![Screenshot](https://github.com/sionar/WikiGraph/blob/master/screenshots/1.png)
@@ -106,6 +105,89 @@ export const handleMouseDrag = e => {
   if (!foundNode) {
     xPan += e.movementX;
     yPan += e.movementY;
+  }
+}
+```
+
+### Support for mobile users
+
+A lot of work was done to make the website responsive for mobile and tablet users. There is not enough room to display some items when the device is viewed in portrait mode, so css queries are done to hide those elements based on the screen size.
+
+```css
+@media only screen and (max-width: 500px) {
+  h2 {
+    display: none;
+  }
+
+  #start-input {
+    width: 150px;
+  }
+
+  #info-box {
+    display: none;
+  }
+
+  #info-button {
+    display: none;
+  }
+}
+```
+
+Views on device:
+
+![Horizontal view](https://github.com/sionar/WikiGraph/blob/master/screenshots/2.png)
+![Vertical view](https://github.com/sionar/WikiGraph/blob/master/screenshots/3.png)
+
+When a user touches the screen, ```mouseup```, ```mousedown```, and ```mousemove``` events do not fire. To emulate those actions, ```touchstart``` and ```touchmove``` are used. In the ```touchstart``` handler, the ```touchX1```, ```touchY1``` variables are set when the user touches the screen. If a second touch is detected, those get stored in ```touchX2``` and ```touchY2```. These values are acquired from the event's touch array.
+
+```javascript
+//mobile.js
+const handleTouchStart = e => {
+  touchX1 = e.touches[0].clientX;
+  touchY1 = e.touches[0].clientY;
+
+  if (e.touches.length >= 2) {
+    distance = getDist(e.touches[0].clientX, e.touches[1].clientX, e.touches[0].clientY, e.touches[1].clientY);
+  }
+}
+```
+
+From there, similar logic as we did with the ```mouseMove``` event can be used to determine if the user is panning or zooming. In the ```touchmove``` event handler, we check the change and then update ```touchX1```, ```touchY1```, ```touchX2``` and ```touchY2``` variables. For zooming, we first check to see that the user is touching the screen with 2 fingers. Then, we calculate the difference in distance from the previous event, and zoom out if the distance increases and zoom in if the distance decreases.
+
+```javascript
+//mobile.js
+const handleTouchMove = e => {  
+  e.preventDefault();
+  const x = (e.changedTouches[0].clientX) / scale - xPan;
+  const y = (e.changedTouches[0].clientY) / scale - yPan;
+  const deltaX = e.changedTouches[0].clientX - touchX1;
+  const deltaY = e.changedTouches[0].clientY - touchY1;
+  const nodeKeys = Object.keys(nodes);
+  let node, distSq, foundNode = false;
+
+  nodeKeys.forEach(nodeKey => {
+    node = nodes[nodeKey];
+    distSq = Math.pow((x - node.position.x),2) + Math.pow((y - node.position.y),2)
+    if (distSq < RADIUS*RADIUS ) {
+      foundNode = true;
+      node.position.x = node.position.x + deltaX / scale;
+      node.position.y = node.position.y + deltaY / scale;
+    }
+  })
+  if (!foundNode) {
+    modifyPan(deltaX, deltaY);
+  }
+
+  touchX1 = e.changedTouches[0].clientX;
+  touchY1 = e.changedTouches[0].clientY;
+
+  if (e.touches.length >= 2) {
+    const newDist = getDist(e.touches[0].clientX, e.touches[1].clientX, e.touches[0].clientY, e.touches[1].clientY);
+    if (distance - newDist < 0)
+      modifyScale(1/1.03);
+    else
+      modifyScale(1.03);
+    distance = newDist;
   }
 }
 ```
