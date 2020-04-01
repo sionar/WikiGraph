@@ -121,8 +121,8 @@ export const handleResize = e => {
   const canvas2 = document.getElementById('canvas2');
   const ctx2 = canvas2.getContext('2d');
  
-  const width = screen.width ? screen.width : window.innerWidth;
-  const height = screen.height ? screen.height : window.innerHeight;
+  const width = /Mobi/.test(navigator.userAgent) ? screen.width : window.innerWidth;
+  const height = /Mobi/.test(navigator.userAgent) ? screen.height : window.innerHeight;
 
   canvas1.width = width;
   canvas1.height = height;
