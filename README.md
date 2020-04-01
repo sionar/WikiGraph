@@ -2,7 +2,7 @@
 
 [Live Link](https://sionar.github.io/WikiGraph/)
 
-
+![Screenshot](https://github.com/sionar/WikiGraph/blob/master/screenshots/1.png)
 
 
 WikiGraph is an interactive graph generator that generates relationships between different links on Wikipedia. The user starts by entering a wikipedia article name. From there, the user clicks on one of the edges on that node, which generates more nodes and edges. The edges are the first wikipedia links that can be found when the user visits that wikipedia article. The user can change the view of the graph in several ways. By clicking and dragging on empty space, the user can pan and change which portion of the graph they want to look at. Clicking and dragging nodes changes the position of the nodes on the graph. This in turn moves the edges that are connected to that node. The user can also use their scroll wheel to zoom in and zoom out of the graph. Touch support is enabled - the site works for mobile users as well. Clicking on a node sets it as the active node, which highlights the potential edges for that node and displays the info for that wikipedia article on the left side of the screen.
