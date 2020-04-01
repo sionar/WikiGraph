@@ -9324,7 +9324,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./src/actions.js");
 /* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./canvas */ "./src/canvas.js");
 /* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./events */ "./src/events.js");
-/* harmony import */ var _mobile__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./mobile */ "./src/mobile.js");
+/* harmony import */ var _mobile__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./mobile */ "./src/mobile.js");
 
 
 
@@ -9354,7 +9354,7 @@ document.addEventListener('DOMContentLoaded', () => {
   canvasBox.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_2__["handleClickEdge"]);
   window.addEventListener('resize', _events__WEBPACK_IMPORTED_MODULE_2__["handleResize"]);
 
-  Object(_mobile__WEBPACK_IMPORTED_MODULE_4__["loadMobileEventListeners"])();
+  Object(_mobile__WEBPACK_IMPORTED_MODULE_3__["loadMobileEventListeners"])();
 
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_1__["renderNodes"], 17);
   setInterval(_canvas__WEBPACK_IMPORTED_MODULE_1__["renderEdges"], 17);
