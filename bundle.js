@@ -9188,6 +9188,7 @@ const handleMouseScroll = e => {
 }
 
 const handleMouseDrag = e => {
+  e.preventDefault();
   const x = (e.offsetX) / scale - xPan;
   const y = (e.offsetY + _store__WEBPACK_IMPORTED_MODULE_0__["SCREEN_Y_OFFSET"]) / scale - yPan;  
   const nodeKeys = Object.keys(_store__WEBPACK_IMPORTED_MODULE_0__["nodes"]);
