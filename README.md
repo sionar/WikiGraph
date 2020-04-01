@@ -135,8 +135,8 @@ A lot of work was done to make the website responsive for mobile and tablet user
 
 Views on device:
 
-![Horizontal view](https://github.com/sionar/WikiGraph/blob/master/screenshots/2.png)
-![Vertical view](https://github.com/sionar/WikiGraph/blob/master/screenshots/3.png)
+![Horizontal view](https://github.com/sionar/WikiGraph/blob/master/screenshots/2.JPG)
+![Vertical view](https://github.com/sionar/WikiGraph/blob/master/screenshots/3.JPG)
 
 When a user touches the screen, ```mouseup```, ```mousedown```, and ```mousemove``` events do not fire. To emulate those actions, ```touchstart``` and ```touchmove``` are used. In the ```touchstart``` handler, the ```touchX1```, ```touchY1``` variables are set when the user touches the screen. If a second touch is detected, those get stored in ```touchX2``` and ```touchY2```. These values are acquired from the event's touch array.
 
