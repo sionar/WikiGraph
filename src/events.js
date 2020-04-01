@@ -22,7 +22,6 @@ export const handleMouseScroll = e => {
 }
 
 export const handleMouseDrag = e => {
-  e.preventDefault();
   const x = (e.offsetX) / scale - xPan;
   const y = (e.offsetY + SCREEN_Y_OFFSET) / scale - yPan;  
   const nodeKeys = Object.keys(nodes);
