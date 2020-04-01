@@ -1,3 +1,10 @@
 # WikiGraph
 
 [Live Link](https://sionar.github.io/WikiGraph/)
+
+
+
+
+WikiGraph is an interactive graph generator that generates relationships between different links on Wikipedia. The user starts by entering a wikipedia article name. From there, the user clicks on one of the edges on that node, which generates more nodes and edges. The edges are the first wikipedia links that can be found when the user visits that wikipedia article. The user can change the view of the graph in several ways. By clicking and dragging on empty space, the user can pan and change which portion of the graph they want to look at. Clicking and dragging nodes changes the position of the nodes on the graph. This in turn moves the edges that are connected to that node. The user can also use their scroll wheel to zoom in and zoom out of the graph. Touch support is enabled - the site works for mobile users as well. Clicking on a node sets it as the active node, which highlights the potential edges for that node and displays the info for that wikipedia article on the left side of the screen.
+
+WikiGraph is created purely with Javascript with npm (node package manager) and bundled with webpack. The [wtf_wikipedia library](https://github.com/spencermountain/wtf_wikipedia) is used to parse wikipedia articles and grab their internal links and information. The graph rendering is done with HTML5 canvas. Event listeners are attached to the canvas container that listen to various click and mobile touch events. Graph nodes and edges are stored as Javascript objects. When a node is created, its links, information, position and color are stored as keys in the object, and an edge is created that references the two nodes connecting the edge. The panning effect is done by keeping track of two values: panX and panY, which change when a user drags their mouse or finger across the screen. The nodes and edges are rendered at their positions offset by panX and panY. The zooming feature utilizes canvas context.scale(x,y), which changes the scale for all objects rendered in canvas. 
