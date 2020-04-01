@@ -9478,7 +9478,7 @@ const handleTouchMove = e => {
   touchY1 = e.changedTouches[0].clientY;
 
   if (e.touches.length >= 2) {
-    const newDist = dist(e.touches[0].clientX, e.touches[1].clientX, e.touches[0].clientY, e.touches[1].clientY);
+    const newDist = getDist(e.touches[0].clientX, e.touches[1].clientX, e.touches[0].clientY, e.touches[1].clientY);
     if (distance - newDist < 0)
       Object(_events__WEBPACK_IMPORTED_MODULE_0__["modifyScale"])(1/1.03);
     else
