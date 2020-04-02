@@ -20,7 +20,7 @@ export const createNode = (name, prevNode, angle) => {
     for (let i = 0; i < links.length; i++) {
       if (nodeLinks.length >= 8)
         break;
-      if (links[i].type === 'internal')
+      if (links[i].type === 'internal' && links[i].page[0] !== ':')
         nodeLinks.push(links[i]);
     }
     nodes[name] = {};
@@ -38,7 +38,6 @@ export const createNode = (name, prevNode, angle) => {
     }
     setActiveNodeKey(name);
     renderInfo(name, nodes[name].text);
-
   })
 }
 

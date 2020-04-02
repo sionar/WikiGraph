@@ -42,17 +42,29 @@ body {
 
 h1 {
   font-size: 30px;
+  user-select: none;
 }
 
 
 h2 {
   margin-left: 20px;
+  user-select: none;
 }
 
 .icon {
   width: 30px;
   height: 30px;
   margin-left: 5px;
+}
+
+.icon:hover path {
+  fill: #888888;
+  animation: icon-color 0.2s ease-out 0s 1 forwards;
+}
+
+@keyframes icon-color {
+  from {fill: #000000;}
+  to {fill: #888888;}
 }
 
 #linkedin-icon {
@@ -113,10 +125,6 @@ h2 {
   display: none;
 }
 
-#start-input:focus {
-  border: 1px solid rgba(200,200,200,0.8);
-}
-
 .button {
   width: 100px;
   height: 30px;
@@ -129,7 +137,13 @@ h2 {
 }
 
 .button:hover {
+  animation: button-color 0.3s ease-out 0s 1 forwards;
   background-color: rgba(46, 161, 228, 0.849);
+}
+
+@keyframes button-color {
+  from {background-color: rgba(61, 177, 245, 0.849);}
+  to {background-color: rgba(46, 161, 228, 0.849);}
 }
 
 #reset-button {
@@ -179,4 +193,23 @@ h2 {
 #info-text {
   margin: 30px 20px 20px 20px;
   z-index: -3;
+}
+
+.info-show {
+  display: flex;
+  animation: info-box-slide-in 0.3s ease-out 0s 1 forwards;
+}
+
+@keyframes info-box-slide-in {
+  from {left: -20vw;}
+  to {left: 0vw;}
+}
+
+.info-hide {
+  animation: info-box-slide-out 0.3s ease-out 0s 1 forwards;
+}
+
+@keyframes info-box-slide-out {
+  from {left: 0vw;}
+  to {left: -20vw;}
 }

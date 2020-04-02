@@ -8961,7 +8961,7 @@ const createNode = (name, prevNode, angle) => {
     for (let i = 0; i < links.length; i++) {
       if (nodeLinks.length >= 8)
         break;
-      if (links[i].type === 'internal')
+      if (links[i].type === 'internal' && links[i].page[0] !== ':')
         nodeLinks.push(links[i]);
     }
     _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][name] = {};
@@ -8979,7 +8979,6 @@ const createNode = (name, prevNode, angle) => {
     }
     Object(_events__WEBPACK_IMPORTED_MODULE_2__["setActiveNodeKey"])(name);
     renderInfo(name, _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][name].text);
-
   })
 }
 
@@ -9385,9 +9384,13 @@ const handleInfoClick = e => {
   if (button.innerText === 'Show Info') {
     button.innerText = 'Hide Info';
     infoBox.style.display = 'flex';
+    infoBox.classList.remove('info-hide');
+    infoBox.classList.add('info-show');
   } else {
     button.innerText = 'Show Info'
-    infoBox.style.display = 'none';
+    infoBox.classList.remove('info-show');
+    infoBox.classList.add('info-hide');
+    setTimeout(() => infoBox.style.display = 'none', 300);    
   }
 }
 

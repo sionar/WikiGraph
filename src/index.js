@@ -59,9 +59,13 @@ const handleInfoClick = e => {
   if (button.innerText === 'Show Info') {
     button.innerText = 'Hide Info';
     infoBox.style.display = 'flex';
+    infoBox.classList.remove('info-hide');
+    infoBox.classList.add('info-show');
   } else {
     button.innerText = 'Show Info'
-    infoBox.style.display = 'none';
+    infoBox.classList.remove('info-show');
+    infoBox.classList.add('info-hide');
+    setTimeout(() => infoBox.style.display = 'none', 300);    
   }
 }
 
