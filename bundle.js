@@ -8971,6 +8971,11 @@ const createNode = (name, prevNode, angle) => {
     const canvas = document.getElementById('canvas1');
     if (!prevNode) {
       _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][name].position = {x: canvas.width/2, y: canvas.height/2};
+      const infoBox = document.getElementById('info-box');
+      const infoButton = document.getElementById('info-button');
+      infoBox.className = "";
+      infoBox.classList.add('info-show');
+      infoButton.innerHTML = "Hide Info";
     } else {
       const xPos = _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][prevNode].position.x + _store__WEBPACK_IMPORTED_MODULE_1__["NODE_DISTANCE"] * Math.cos(angle); 
       const yPos = _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][prevNode].position.y + _store__WEBPACK_IMPORTED_MODULE_1__["NODE_DISTANCE"] * Math.sin(angle); 
@@ -8997,6 +9002,16 @@ const reset = () => {
   Object(_store__WEBPACK_IMPORTED_MODULE_1__["resetStore"])();
   Object(_events__WEBPACK_IMPORTED_MODULE_2__["setActiveNodeKey"])(null);
   renderInfo('', '');
+  const infoBox = document.getElementById('info-box');
+  const infoButton = document.getElementById('info-button');
+  if (infoBox.classList.contains("info-show")) {
+    infoBox.classList.add('info-slide-out');
+    infoButton.innerHTML = "Show Info";
+    setTimeout(() => {
+      infoBox.className = "";  
+      infoBox.classList.add('info-hide');
+    }, 300);    
+  }
 }
 
 const randomColor = () => {
@@ -9383,14 +9398,14 @@ const handleInfoClick = e => {
   const infoBox = document.getElementById('info-box');
   if (button.innerText === 'Show Info') {
     button.innerText = 'Hide Info';
-    infoBox.style.display = 'flex';
-    infoBox.classList.remove('info-hide');
+    infoBox.className = "";
     infoBox.classList.add('info-show');
   } else {
-    button.innerText = 'Show Info'
-    infoBox.classList.remove('info-show');
-    infoBox.classList.add('info-hide');
-    setTimeout(() => infoBox.style.display = 'none', 300);    
+    button.innerText = 'Show Info';
+    infoBox.classList.add('info-slide-out');
+    setTimeout(() => {
+      infoBox.className = ""; 
+      infoBox.classList.add('info-hide')}, 300);
   }
 }
 

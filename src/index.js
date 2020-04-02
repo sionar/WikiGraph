@@ -58,14 +58,14 @@ const handleInfoClick = e => {
   const infoBox = document.getElementById('info-box');
   if (button.innerText === 'Show Info') {
     button.innerText = 'Hide Info';
-    infoBox.style.display = 'flex';
-    infoBox.classList.remove('info-hide');
+    infoBox.className = "";
     infoBox.classList.add('info-show');
   } else {
-    button.innerText = 'Show Info'
-    infoBox.classList.remove('info-show');
-    infoBox.classList.add('info-hide');
-    setTimeout(() => infoBox.style.display = 'none', 300);    
+    button.innerText = 'Show Info';
+    infoBox.classList.add('info-slide-out');
+    setTimeout(() => {
+      infoBox.className = ""; 
+      infoBox.classList.add('info-hide')}, 300);
   }
 }
 

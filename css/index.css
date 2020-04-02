@@ -176,7 +176,6 @@ h2 {
   min-height: 80vh;
   min-width: 250px;
   border-radius: 0px 0px 20px;
-  display: flex;
   flex-direction: column;
   align-items: center;
   position: absolute;
@@ -193,6 +192,7 @@ h2 {
 #info-text {
   margin: 30px 20px 20px 20px;
   z-index: -3;
+  color: #000000;
 }
 
 .info-show {
@@ -205,11 +205,15 @@ h2 {
   to {left: 0vw;}
 }
 
-.info-hide {
+.info-slide-out {
   animation: info-box-slide-out 0.3s ease-out 0s 1 forwards;
 }
 
 @keyframes info-box-slide-out {
   from {left: 0vw;}
-  to {left: -20vw;}
+  to {left: -40vw;}
+}
+
+.info-hide {
+  display: none;
 }

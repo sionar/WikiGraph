@@ -30,6 +30,11 @@ export const createNode = (name, prevNode, angle) => {
     const canvas = document.getElementById('canvas1');
     if (!prevNode) {
       nodes[name].position = {x: canvas.width/2, y: canvas.height/2};
+      const infoBox = document.getElementById('info-box');
+      const infoButton = document.getElementById('info-button');
+      infoBox.className = "";
+      infoBox.classList.add('info-show');
+      infoButton.innerHTML = "Hide Info";
     } else {
       const xPos = nodes[prevNode].position.x + NODE_DISTANCE * Math.cos(angle); 
       const yPos = nodes[prevNode].position.y + NODE_DISTANCE * Math.sin(angle); 
@@ -56,6 +61,16 @@ export const reset = () => {
   resetStore();
   setActiveNodeKey(null);
   renderInfo('', '');
+  const infoBox = document.getElementById('info-box');
+  const infoButton = document.getElementById('info-button');
+  if (infoBox.classList.contains("info-show")) {
+    infoBox.classList.add('info-slide-out');
+    infoButton.innerHTML = "Show Info";
+    setTimeout(() => {
+      infoBox.className = "";  
+      infoBox.classList.add('info-hide');
+    }, 300);    
+  }
 }
 
 const randomColor = () => {
