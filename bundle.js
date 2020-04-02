@@ -8973,9 +8973,12 @@ const createNode = (name, prevNode, angle) => {
       _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][name].position = {x: canvas.width/2, y: canvas.height/2};
       const infoBox = document.getElementById('info-box');
       const infoButton = document.getElementById('info-button');
+      const instructions = document.getElementById('instructions-container');
       infoBox.className = "";
       infoBox.classList.add('info-show');
       infoButton.innerHTML = "Hide Info";
+      instructions.style.display = "None";
+      
     } else {
       const xPos = _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][prevNode].position.x + _store__WEBPACK_IMPORTED_MODULE_1__["NODE_DISTANCE"] * Math.cos(angle); 
       const yPos = _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][prevNode].position.y + _store__WEBPACK_IMPORTED_MODULE_1__["NODE_DISTANCE"] * Math.sin(angle); 

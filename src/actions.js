@@ -32,9 +32,12 @@ export const createNode = (name, prevNode, angle) => {
       nodes[name].position = {x: canvas.width/2, y: canvas.height/2};
       const infoBox = document.getElementById('info-box');
       const infoButton = document.getElementById('info-button');
+      const instructions = document.getElementById('instructions-container');
       infoBox.className = "";
       infoBox.classList.add('info-show');
       infoButton.innerHTML = "Hide Info";
+      instructions.style.display = "None";
+      
     } else {
       const xPos = nodes[prevNode].position.x + NODE_DISTANCE * Math.cos(angle); 
       const yPos = nodes[prevNode].position.y + NODE_DISTANCE * Math.sin(angle); 
