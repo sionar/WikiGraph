@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   startButton.addEventListener('click', handleStartClick);
   infoButton.addEventListener('click', handleInfoClick);
-  startInput.addEventListener('click', handleInputClearErrors);
+  startInput.addEventListener('input', handleInputClearErrors);
   canvasBox.addEventListener('wheel', handleMouseScroll);
   canvasBox.addEventListener('mousedown', handleMouseDown);
   canvasBox.addEventListener('mouseup', handleMouseUp);
@@ -70,6 +70,7 @@ const handleInfoClick = e => {
 }
 
 export const handleInputClearErrors = () => {
+  console.log('hi')
   const input = document.getElementById('start-input');
   input.style.border = "1px solid #5c51ad";
   const error = document.getElementById('start-input-error');

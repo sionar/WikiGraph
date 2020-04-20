@@ -9363,7 +9363,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   startButton.addEventListener('click', handleStartClick);
   infoButton.addEventListener('click', handleInfoClick);
-  startInput.addEventListener('click', handleInputClearErrors);
+  startInput.addEventListener('input', handleInputClearErrors);
   canvasBox.addEventListener('wheel', _events__WEBPACK_IMPORTED_MODULE_2__["handleMouseScroll"]);
   canvasBox.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_2__["handleMouseDown"]);
   canvasBox.addEventListener('mouseup', _events__WEBPACK_IMPORTED_MODULE_2__["handleMouseUp"]);
@@ -9414,6 +9414,7 @@ const handleInfoClick = e => {
 }
 
 const handleInputClearErrors = () => {
+  console.log('hi')
   const input = document.getElementById('start-input');
   input.style.border = "1px solid #5c51ad";
   const error = document.getElementById('start-input-error');

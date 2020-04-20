@@ -50,6 +50,7 @@ h1 {
 h2 {
   margin-left: 20px;
   user-select: none;
+  font-weight: 100;
 }
 
 .icon {
@@ -110,6 +111,10 @@ h2 {
   text-align: center;
   outline: none;
   position: relative;
+}
+
+#start-input::placeholder {
+  color: #cccccc;
 }
 
 #start-input-error {
