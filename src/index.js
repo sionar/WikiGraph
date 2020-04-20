@@ -71,7 +71,7 @@ const handleInfoClick = e => {
 
 export const handleInputClearErrors = () => {
   const input = document.getElementById('start-input');
-  input.style.border = "1px solid rgba(37, 169, 246, 0.849)";
+  input.style.border = "1px solid #5c51ad";
   const error = document.getElementById('start-input-error');
   error.style.display = "none";
 }

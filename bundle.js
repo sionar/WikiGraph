@@ -9196,6 +9196,7 @@ const handleMouseScroll = e => {
   const ctx1 = canvas1.getContext('2d');
   const canvas2 = document.getElementById('canvas2');
   const ctx2 = canvas2.getContext('2d');
+  const oldScale = scale;
   if (e.deltaY < 0)
     scale *= 1.05;
   else 
@@ -9414,7 +9415,7 @@ const handleInfoClick = e => {
 
 const handleInputClearErrors = () => {
   const input = document.getElementById('start-input');
-  input.style.border = "1px solid rgba(37, 169, 246, 0.849)";
+  input.style.border = "1px solid #5c51ad";
   const error = document.getElementById('start-input-error');
   error.style.display = "none";
 }

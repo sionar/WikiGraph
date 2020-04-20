@@ -13,6 +13,7 @@ export const handleMouseScroll = e => {
   const ctx1 = canvas1.getContext('2d');
   const canvas2 = document.getElementById('canvas2');
   const ctx2 = canvas2.getContext('2d');
+  const oldScale = scale;
   if (e.deltaY < 0)
     scale *= 1.05;
   else 
