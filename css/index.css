@@ -216,6 +216,12 @@ h2 {
   font-size: 20px;
 }
 
+.text-highlight {
+  color: white;
+  font-weight: bold;
+  margin: 0px 3px;
+}
+
 #info-text {
   margin: 30px 20px 20px 20px;
   z-index: -3;
