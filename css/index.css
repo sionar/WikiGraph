@@ -169,6 +169,10 @@ h2 {
   to {background-color: #7367d1;}
 }
 
+#info-button {
+  display: none;
+}
+
 #reset-button {
   margin-right: 20px;
 }
@@ -243,7 +247,7 @@ h2 {
 
 #instructions-container {
   width: 700px;
-  height: 400px;
+  height: 375px;
   background-color: rgb(183, 183, 235);
   box-sizing: border-box;
   border-radius: 20px;
@@ -254,9 +258,15 @@ h2 {
   position: fixed;
   top: 15vh;
   margin-top: 100px;
-  font-size: 24px;
-  line-height: 36px;
+  font-size: 20px;
+  line-height: 24px;
   user-select: none;
+}
+
+#instructions-container li {
+  padding: 10px;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 #instructions-header {
@@ -275,5 +285,5 @@ h2 {
 
 @keyframes instructions-color {
   from {background-color: rgb(183, 183, 235);}
-  to {background-color: rgb(220, 220, 240);}
+  to {background-color: rgb(191, 191, 228);}
 }

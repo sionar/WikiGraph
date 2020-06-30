@@ -8987,6 +8987,12 @@ const createNode = (name, prevNode, angle) => {
     }
     Object(_events__WEBPACK_IMPORTED_MODULE_2__["setActiveNodeKey"])(name);
     renderInfo(name, _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][name].text);
+
+    const mobileVert = window.matchMedia("(max-width: 500px)");
+    const infoButton = document.getElementById('info-button');
+    console.log(mobileVert);
+    if (!mobileVert.matches)
+      infoButton.style.display = 'block'; 
   })
 }
 
@@ -9007,6 +9013,7 @@ const reset = () => {
   renderInfo('', '');
   const infoBox = document.getElementById('info-box');
   const infoButton = document.getElementById('info-button');
+ 
   if (infoBox.classList.contains("info-show")) {
     infoBox.classList.add('info-slide-out');
     infoButton.innerHTML = "Show Info";
@@ -9015,6 +9022,7 @@ const reset = () => {
       infoBox.classList.add('info-hide');
     }, 300);    
   }
+  infoButton.style.display = 'none';
 }
 
 const randomColor = () => {

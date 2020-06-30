@@ -15,6 +15,10 @@
     display: none;
   }
 
+  #help-button {
+    display: none;
+  }
+
   .info-show {
     display: none;
   }
@@ -36,6 +40,10 @@
   #info-text {
     font-size: 6px;
     margin-top: 5px;
+  }
+
+  #help-button {
+    display: none;
   }
 
   #instructions-container {
