@@ -173,10 +173,6 @@ h2 {
   margin-right: 20px;
 }
 
-#help-button {
-
-}
-
 #canvas-box {
   display: flex;
   flex-grow: 1;
@@ -248,7 +244,7 @@ h2 {
 #instructions-container {
   width: 700px;
   height: 400px;
-  background-color: rgba(0,0,255,0.1);
+  background-color: rgb(183, 183, 235);
   box-sizing: border-box;
   border-radius: 20px;
   padding: 10px;
@@ -270,7 +266,6 @@ h2 {
 
 #instructions-list {
   margin-top: 20px;
-
 }
 
 #instructions-container:hover {
@@ -279,6 +274,6 @@ h2 {
 }
 
 @keyframes instructions-color {
-  from {background-color: rgba(0,0,255,0.1);}
-  to {background-color: rgba(0,0,255,0.2);}
+  from {background-color: rgb(183, 183, 235);}
+  to {background-color: rgb(220, 220, 240);}
 }

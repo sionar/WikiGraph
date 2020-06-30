@@ -9331,11 +9331,12 @@ const modifyScale = (val) => {
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: handleInputClearErrors, toggleInput, showErrors */
+/*! exports provided: handleHelpClick, handleInputClearErrors, toggleInput, showErrors */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleHelpClick", function() { return handleHelpClick; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleInputClearErrors", function() { return handleInputClearErrors; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toggleInput", function() { return toggleInput; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "showErrors", function() { return showErrors; });
@@ -9352,6 +9353,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
   const infoButton = document.getElementById('info-button');
   const startInput = document.getElementById('start-input');
+  const helpButton = document.getElementById('help-button')
   const canvas1 = document.getElementById('canvas1');
   const canvas2 = document.getElementById('canvas2');
   const canvasBox = document.getElementById('canvas-box');
@@ -9363,6 +9365,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   startButton.addEventListener('click', handleStartClick);
   infoButton.addEventListener('click', handleInfoClick);
+  helpButton.addEventListener('click', handleHelpClick);
   startInput.addEventListener('input', handleInputClearErrors);
   canvasBox.addEventListener('wheel', _events__WEBPACK_IMPORTED_MODULE_2__["handleMouseScroll"]);
   canvasBox.addEventListener('mousedown', _events__WEBPACK_IMPORTED_MODULE_2__["handleMouseDown"]);
@@ -9413,8 +9416,16 @@ const handleInfoClick = e => {
   }
 }
 
+const handleHelpClick = e => {
+  e.preventDefault();
+  const instructions = document.getElementById('instructions-container');
+  if (instructions.style.display == 'none')
+    instructions.style.display = 'flex';
+  else
+    instructions.style.display = 'none';
+}
+
 const handleInputClearErrors = () => {
-  console.log('hi')
   const input = document.getElementById('start-input');
   input.style.border = "1px solid #5c51ad";
   const error = document.getElementById('start-input-error');

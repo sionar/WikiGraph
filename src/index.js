@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
   const infoButton = document.getElementById('info-button');
   const startInput = document.getElementById('start-input');
+  const helpButton = document.getElementById('help-button')
   const canvas1 = document.getElementById('canvas1');
   const canvas2 = document.getElementById('canvas2');
   const canvasBox = document.getElementById('canvas-box');
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   startButton.addEventListener('click', handleStartClick);
   infoButton.addEventListener('click', handleInfoClick);
+  helpButton.addEventListener('click', handleHelpClick);
   startInput.addEventListener('input', handleInputClearErrors);
   canvasBox.addEventListener('wheel', handleMouseScroll);
   canvasBox.addEventListener('mousedown', handleMouseDown);
@@ -69,8 +71,16 @@ const handleInfoClick = e => {
   }
 }
 
+export const handleHelpClick = e => {
+  e.preventDefault();
+  const instructions = document.getElementById('instructions-container');
+  if (instructions.style.display == 'none')
+    instructions.style.display = 'flex';
+  else
+    instructions.style.display = 'none';
+}
+
 export const handleInputClearErrors = () => {
-  console.log('hi')
   const input = document.getElementById('start-input');
   input.style.border = "1px solid #5c51ad";
   const error = document.getElementById('start-input-error');
