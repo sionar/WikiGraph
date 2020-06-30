@@ -81,10 +81,24 @@ h2 {
 
 #button-bar {
   display: flex;
+  flex-direction: row;
   width: 100vw;
   background-color: #6557d2;
   height: 50px;
   align-items: center;
+  justify-content: space-between;
+}
+
+#button-left-bar {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+#button-right-bar {
+  margin-right: 10px;
+  display: flex;
+  flex-direction: row;
 }
 
 #start-form {
@@ -105,7 +119,6 @@ h2 {
 }
 
 #start-input {
-  margin-left: 10px;
   width: 200px;
   height: 25px;
   border-radius: 3px;
@@ -158,6 +171,10 @@ h2 {
 
 #reset-button {
   margin-right: 20px;
+}
+
+#help-button {
+
 }
 
 #canvas-box {
@@ -253,7 +270,7 @@ h2 {
 
 #instructions-list {
   margin-top: 20px;
-  
+
 }
 
 #instructions-container:hover {
