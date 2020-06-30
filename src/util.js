@@ -1,7 +1,7 @@
 import { handleStartClick } from './index';
 
 export const getRandomTitle = () => {
-  const domain = 'http://en.wikipedia.org/w/api.php?';
+  const domain = 'https://en.wikipedia.org/w/api.php?';
   const headerParams = '&origin=*&format=json&formatversion=2';
   const searchParams = "&action=query&list=random&rnnamespace=0&rnlimit=1";
   const url = domain + headerParams + searchParams;
