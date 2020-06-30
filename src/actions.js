@@ -48,10 +48,11 @@ export const createNode = (name, prevNode, angle) => {
     renderInfo(name, nodes[name].text);
 
     const mobileVert = window.matchMedia("(max-width: 500px)");
+    const randomButton = document.getElementById('random-button');
     const infoButton = document.getElementById('info-button');
-    console.log(mobileVert);
     if (!mobileVert.matches)
       infoButton.style.display = 'block'; 
+    randomButton.style.display = 'none';
   })
 }
 
@@ -71,8 +72,8 @@ export const reset = () => {
   setActiveNodeKey(null);
   renderInfo('', '');
   const infoBox = document.getElementById('info-box');
+  const randomButton = document.getElementById('random-button');
   const infoButton = document.getElementById('info-button');
- 
   if (infoBox.classList.contains("info-show")) {
     infoBox.classList.add('info-slide-out');
     infoButton.innerHTML = "Show Info";
@@ -81,6 +82,7 @@ export const reset = () => {
       infoBox.classList.add('info-hide');
     }, 300);    
   }
+  randomButton.style.display = 'block';
   infoButton.style.display = 'none';
 }
 

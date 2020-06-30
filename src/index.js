@@ -3,11 +3,13 @@ import { renderNodes, renderEdges} from './canvas';
 import { handleMouseScroll, handleMouseDown, handleMouseUp, handleMouseMove, 
          handleClickNode, handleClickEdge, handleResize } from './events';
 import { loadMobileEventListeners } from './mobile';
+import { getRandomTitle } from './util'
          
 document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
   const infoButton = document.getElementById('info-button');
   const startInput = document.getElementById('start-input');
+  const randomButton = document.getElementById('random-button')
   const helpButton = document.getElementById('help-button')
   const canvas1 = document.getElementById('canvas1');
   const canvas2 = document.getElementById('canvas2');
@@ -20,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   startButton.addEventListener('click', handleStartClick);
   infoButton.addEventListener('click', handleInfoClick);
+  randomButton.addEventListener('click', handleRandomClick);
   helpButton.addEventListener('click', handleHelpClick);
   startInput.addEventListener('input', handleInputClearErrors);
   canvasBox.addEventListener('wheel', handleMouseScroll);
@@ -37,9 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 
-const handleStartClick = e => {
-  e.preventDefault();
-  const button = e.target;
+export const handleStartClick = e => {
+  if (e)
+    e.preventDefault();
+  const button = document.getElementById('start-button');
   const input = document.getElementById('start-input');
   if (button.innerText === 'Start') {
     if (input.value) {
@@ -69,6 +73,10 @@ const handleInfoClick = e => {
       infoBox.className = ""; 
       infoBox.classList.add('info-hide')}, 300);
   }
+}
+
+export const handleRandomClick = e => {
+  getRandomTitle();
 }
 
 export const handleHelpClick = e => {

@@ -8989,10 +8989,11 @@ const createNode = (name, prevNode, angle) => {
     renderInfo(name, _store__WEBPACK_IMPORTED_MODULE_1__["nodes"][name].text);
 
     const mobileVert = window.matchMedia("(max-width: 500px)");
+    const randomButton = document.getElementById('random-button');
     const infoButton = document.getElementById('info-button');
-    console.log(mobileVert);
     if (!mobileVert.matches)
       infoButton.style.display = 'block'; 
+    randomButton.style.display = 'none';
   })
 }
 
@@ -9012,8 +9013,8 @@ const reset = () => {
   Object(_events__WEBPACK_IMPORTED_MODULE_2__["setActiveNodeKey"])(null);
   renderInfo('', '');
   const infoBox = document.getElementById('info-box');
+  const randomButton = document.getElementById('random-button');
   const infoButton = document.getElementById('info-button');
- 
   if (infoBox.classList.contains("info-show")) {
     infoBox.classList.add('info-slide-out');
     infoButton.innerHTML = "Show Info";
@@ -9022,6 +9023,7 @@ const reset = () => {
       infoBox.classList.add('info-hide');
     }, 300);    
   }
+  randomButton.style.display = 'block';
   infoButton.style.display = 'none';
 }
 
@@ -9339,11 +9341,13 @@ const modifyScale = (val) => {
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: handleHelpClick, handleInputClearErrors, toggleInput, showErrors */
+/*! exports provided: handleStartClick, handleRandomClick, handleHelpClick, handleInputClearErrors, toggleInput, showErrors */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleStartClick", function() { return handleStartClick; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleRandomClick", function() { return handleRandomClick; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleHelpClick", function() { return handleHelpClick; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleInputClearErrors", function() { return handleInputClearErrors; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toggleInput", function() { return toggleInput; });
@@ -9352,6 +9356,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./canvas */ "./src/canvas.js");
 /* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./events */ "./src/events.js");
 /* harmony import */ var _mobile__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./mobile */ "./src/mobile.js");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./util */ "./src/util.js");
+
 
 
 
@@ -9361,6 +9367,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-button');
   const infoButton = document.getElementById('info-button');
   const startInput = document.getElementById('start-input');
+  const randomButton = document.getElementById('random-button')
   const helpButton = document.getElementById('help-button')
   const canvas1 = document.getElementById('canvas1');
   const canvas2 = document.getElementById('canvas2');
@@ -9373,6 +9380,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   startButton.addEventListener('click', handleStartClick);
   infoButton.addEventListener('click', handleInfoClick);
+  randomButton.addEventListener('click', handleRandomClick);
   helpButton.addEventListener('click', handleHelpClick);
   startInput.addEventListener('input', handleInputClearErrors);
   canvasBox.addEventListener('wheel', _events__WEBPACK_IMPORTED_MODULE_2__["handleMouseScroll"]);
@@ -9391,8 +9399,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 const handleStartClick = e => {
-  e.preventDefault();
-  const button = e.target;
+  if (e)
+    e.preventDefault();
+  const button = document.getElementById('start-button');
   const input = document.getElementById('start-input');
   if (button.innerText === 'Start') {
     if (input.value) {
@@ -9422,6 +9431,10 @@ const handleInfoClick = e => {
       infoBox.className = ""; 
       infoBox.classList.add('info-hide')}, 300);
   }
+}
+
+const handleRandomClick = e => {
+  Object(_util__WEBPACK_IMPORTED_MODULE_4__["getRandomTitle"])();
 }
 
 const handleHelpClick = e => {
@@ -9564,6 +9577,38 @@ const resetStore = () => {
   edges = [];
 }
 
+
+/***/ }),
+
+/***/ "./src/util.js":
+/*!*********************!*\
+  !*** ./src/util.js ***!
+  \*********************/
+/*! exports provided: getRandomTitle */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRandomTitle", function() { return getRandomTitle; });
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./src/index.js");
+
+
+const getRandomTitle = () => {
+  const domain = 'http://en.wikipedia.org/w/api.php?';
+  const headerParams = '&origin=*&format=json&formatversion=2';
+  const searchParams = "&action=query&list=random&rnnamespace=0&rnlimit=1";
+  const url = domain + headerParams + searchParams;
+  const input = document.getElementById('start-input');
+  let title;
+  fetch(url, {method: 'GET', mode: 'cors'})
+    .then(res => res.json())
+    .then(res => {
+      title = res.query.random[0].title;
+      input.value = title;
+      Object(_index__WEBPACK_IMPORTED_MODULE_0__["handleStartClick"])(null)
+    })
+
+}
 
 /***/ })
 
